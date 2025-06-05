@@ -6,6 +6,7 @@ export const mockArticles: Article[] = [
     image: "/images/a001.png",
     composition: "Хлопок 80%, Полиэстер 20%",
     price: 350,
+    count: 300,
   },
   {
     id: 2,
@@ -13,6 +14,7 @@ export const mockArticles: Article[] = [
     image: "/images/a002.png",
     composition: "Хлопок 100%",
     price: 420,
+    count: 200,
   },
 ];
 

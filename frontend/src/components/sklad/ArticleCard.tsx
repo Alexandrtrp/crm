@@ -42,8 +42,9 @@ export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
       <Img src={article.image} alt={article.name} />
       <p>Состав: {article.composition}</p>
       <p>Цена за упаковку: {article.price} ₽</p>
+      <p>На складе: {article.count}</p>
       <label>
-        Сделано:
+        Добавить:
         <Field
           type="number"
           value={amount}

@@ -17,7 +17,7 @@ export const WarehousePage: React.FC = () => {
 
   const handleSubmitAmount = (id: number, amount: number) => {
     console.log(`Сохранено ${amount} для артикула ${id}`);
-    setSelectedArticle(null); // сброс выбора после ввода
+    // setSelectedArticle(null); // сброс выбора после ввода
   };
 
   return (
