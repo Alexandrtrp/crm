@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute";  // <-- импортируем
+import PrivateRoute from "./PrivateRoute"; // <-- импортируем
 import { LoginPage } from "../pages/LoginPage";
 import { RegisterPage } from "../pages/RegisterPage";
 import { HomePage } from "../pages/HomePage";
@@ -19,13 +19,13 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <PrivateRoute />,   // Все остальные маршруты за Protected
+    element: <PrivateRoute />, // Все остальные маршруты за Protected
     children: [
-      { path: "", element: <HomePage /> },
       {
         path: "",
         element: <DashboardLayout />,
         children: [
+          { path: "", element: <HomePage /> },
           // { path: "profile", element: <ProfilePage /> },
           { path: "warehouse", element: <WarehousePage /> },
           // { path: "tasks", element: <TasksPage /> },

@@ -43,7 +43,11 @@ export const ArticleList: React.FC<Props> = ({
     <Sidebar>
       <TitleH2>Артикулы</TitleH2>
       <Label>Фильтр</Label>
-      <FilterInput value={filter} onChange={setFilter} placeholder="Найти артикул..."/>
+      <FilterInput
+        value={filter}
+        onChange={setFilter}
+        placeholder="Найти артикул..."
+      />
       {filteredArticles.map((a) => (
         <Item
           key={a.id}
