@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Input = styled.input`
-  margin-top: 0.25rem; /* mt-1 */
+  margin: 0.25rem 0 0.25rem; /* mt-1 */
   display: block;
   width: 100%;
   padding: 0.5rem 0.5rem; /* p-2 */

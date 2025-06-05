@@ -4,7 +4,7 @@ import { LoginPage } from "../pages/LoginPage";
 import { RegisterPage } from "../pages/RegisterPage";
 import { HomePage } from "../pages/HomePage";
 import { ProfilePage } from "../pages/ProfilePage";
-import { SkladPage } from "../pages/SkladPage";
+import { WarehousePage } from "../pages/WarehousePage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
@@ -21,20 +21,20 @@ export const router = createBrowserRouter([
     path: "/",
     element: <PrivateRoute />,   // Все остальные маршруты за Protected
     children: [
-      // { path: "", element: <HomePage /> },
+      { path: "", element: <HomePage /> },
       {
-        path: "app",
+        path: "",
         element: <DashboardLayout />,
         children: [
-          { path: "profile", element: <ProfilePage /> },
-          { path: "warehouse", element: <SkladPage /> },
-          { path: "tasks", element: <TasksPage /> },
+          // { path: "profile", element: <ProfilePage /> },
+          { path: "warehouse", element: <WarehousePage /> },
+          // { path: "tasks", element: <TasksPage /> },
         ],
       },
     ],
   },
-  {
-    path: "*",
-    element: <NotFoundPage />,
-  },
+  // {
+  //   path: "*",
+  //   element: <NotFoundPage />,
+  // },
 ]);

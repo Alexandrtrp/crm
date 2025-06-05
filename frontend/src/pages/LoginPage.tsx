@@ -6,6 +6,7 @@ import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { Text } from "../components/ui/Text";
 import { Link } from "../components/ui/Link";
+import { Title } from "../components/ui/Title";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -22,13 +23,6 @@ const Container = styled.div`
   padding: 2rem; /* p-8 */
   border-radius: 0.5rem; /* rounded-lg */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-`;
-
-const Title = styled.h2`
-  font-size: 1.5rem; /* text-2xl */
-  font-weight: 700; /* font-bold */
-  text-align: center;
-  margin-bottom: 1.5rem; /* mb-6 */
 `;
 
 const Form = styled.form`
