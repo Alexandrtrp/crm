@@ -7,13 +7,14 @@ import { Button } from "../components/ui/Button";
 import { Text } from "../components/ui/Text";
 import { Link } from "../components/ui/Link";
 import { Title } from "../components/ui/Title";
+import { Form } from "../components/ui/Form";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color:${({theme})=> theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const Container = styled.div`
@@ -21,16 +22,12 @@ const Container = styled.div`
   width: 100%;
   background: white;
   padding: 2rem; /* p-8 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border-radius: 0.5rem; /* rounded-lg */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
 `;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem; /* space-y-4 */
-`;
-
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -59,10 +56,7 @@ export const LoginPage: React.FC = () => {
           <Button type="submit">Войти</Button>
         </Form>
         <Text>
-          Нет аккаунта?{" "}
-          <Link href="/register">
-            Регистрация
-          </Link>
+          Нет аккаунта? <Link href="/register">Регистрация</Link>
         </Text>
       </Container>
     </PageWrapper>

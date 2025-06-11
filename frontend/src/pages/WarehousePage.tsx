@@ -5,10 +5,11 @@ import { ArticleList } from "../components/sklad/ArticleList";
 import { ArticleCard } from "../components/sklad/ArticleCard";
 import { WeeklyStats } from "../components/sklad/WeeklyStats";
 import { mockArticles, mockStats } from "../mock/data";
+import { ComponentsTable } from "../components/sklad/ComponentsTable";
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: 250px 1fr 2fr;
   height: 100vh;
 `;
 
@@ -32,6 +33,8 @@ export const WarehousePage: React.FC = () => {
       ) : (
         <WeeklyStats stats={mockStats} />
       )}
+      <ComponentsTable/>
     </Wrapper>
+
   );
 };

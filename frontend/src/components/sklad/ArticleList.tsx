@@ -1,7 +1,6 @@
 // 📁 components/ArticleList.tsx
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Input } from "../ui/Input";
 import { TitleH2 } from "../ui/TitleH2";
 import { Label } from "../ui/Label";
 import { FilterInput } from "../FilterInput";

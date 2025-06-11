@@ -6,6 +6,7 @@ import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { Text } from "../components/ui/Text";
 import { Link } from "../components/ui/Link";
+import { Form } from "../components/ui/Form";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -21,6 +22,9 @@ const Container = styled.div`
   background: white;
   padding: 2rem;
   border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
@@ -31,11 +35,7 @@ const Title = styled.h2`
   margin-bottom: 1.5rem;
 `;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
+
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -72,10 +72,7 @@ export const RegisterPage: React.FC = () => {
           <Button type="submit">Создать аккаунт</Button>
         </Form>
         <Text>
-          Уже есть аккаунт?{" "}
-          <Link href="/login">
-            Войти
-          </Link>
+          Уже есть аккаунт? <Link href="/login">Войти</Link>
         </Text>
       </Container>
     </PageWrapper>

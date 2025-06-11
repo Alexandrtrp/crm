@@ -21,10 +21,28 @@ model Article {
 }
 
 model Component {
-  id   Int    @id @default(autoincrement())
-  name String
-  count Int    @default(0)
-  articles  Article[]  @relation("ArticleComponents")
+  id         Int              @id @default(autoincrement())
+  name       String @unique
+  componentsInStock ComponentStock[]
+  articles   Article[]        @relation("ArticleComponents")
+}
+
+model Warehouse {
+  id        Int               @id @default(autoincrement())
+  name      String            @unique
+  location  String?
+  stocks    ComponentStock[]
+}
+
+model ComponentStock {
+  id          Int        @id @default(autoincrement())
+  component   Component  @relation(fields: [componentId], references: [id])
+  componentId Int
+  warehouse   Warehouse  @relation(fields: [warehouseId], references: [id])
+  warehouseId Int
+  count       Int        @default(0)
+
+  @@unique([componentId, warehouseId]) // уникальность: один компонент в одном складе — одна запись
 }
 
 

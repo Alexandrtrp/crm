@@ -4,7 +4,7 @@
 │   ├── /assets              # Стили, изображения, шрифты
 │   ├── /components          # Переиспользуемые UI компоненты
 │   ├── /features            # Фичи приложения (например, auth, profile)
-│   ├── /layouts             # Основные макеты страниц (например, DashboardLayout)
+│   ├── /layouts             # Основные макеты страниц (например,DashboardLayout)
 │   ├── /pages               # Страницы приложения (например, HomePage, LoginPage)
 │   ├── /routes              # Конфигурация маршрутов
 │   ├── /services            # API-клиенты, запросы на сервер

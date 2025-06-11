@@ -1,6 +1,8 @@
 // 📁 components/ArticleCard.tsx
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Input } from "../ui/Input";
+import { Text } from "../ui/Text";
 
 const Card = styled.div`
   padding: 2rem;
@@ -10,12 +12,6 @@ const Img = styled.img`
   width: 200px;
   height: auto;
   margin-bottom: 1rem;
-`;
-
-const Field = styled.input`
-  margin-top: 1rem;
-  padding: 0.5rem;
-  width: 100px;
 `;
 
 const Button = styled.button`
@@ -43,14 +39,15 @@ export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
       <p>Состав: {article.composition}</p>
       <p>Цена за упаковку: {article.price} ₽</p>
       <p>На складе: {article.count}</p>
-      <label>
-        Добавить:
-        <Field
+      {/* <label>  */}
+        <Text>Добавить:</Text>
+        
+        <Input
           type="number"
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
         />
-      </label>
+      {/* </label> */}
       <Button onClick={() => onSubmit(article.id, amount)}>Сохранить</Button>
     </Card>
   );
