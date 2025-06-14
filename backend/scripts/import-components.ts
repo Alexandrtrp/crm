@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const WAREHOUSE_NAMES = ['Китай', 'Домодедово', 'Мироновская'];
-const EXCEL_FILE = './exels/components-count.xlsx'; // путь к Excel-файлу
+const EXCEL_FILE = './excels/components-count.xlsx'; // путь к Excel-файлу
 
 async function main() {
   const workbook = XLSX.readFile(EXCEL_FILE);

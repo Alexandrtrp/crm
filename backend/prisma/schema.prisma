@@ -14,50 +14,61 @@ model User {
 }
 
 model Article {
-  id          Int                @id @default(autoincrement())
-  name        String
-  count       Int                @default(0) // Сколько готовых артикулов на складе
-  components  ArticleComponent[] // Связь с комплектующими через промежуточную таблицу
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id         Int                @id @default(autoincrement())
+  name      String  @unique
+  count      Int                @default(0) // Сколько готовых артикулов на складе
+  components ArticleComponent[] // Связь с комплектующими через промежуточную таблицу
+  stocks     ArticleStock[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
 }
 
 model Component {
-  id                 Int                @id @default(autoincrement())
-  name               String             @unique
-  componentsInStock  ComponentStock[]   // Остатки комплектующих
-  articles           ArticleComponent[] // Связь с артикулами через промежуточную таблицу
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
+  id                Int                @id @default(autoincrement())
+  name              String             @unique
+  componentsInStock ComponentStock[] // Остатки комплектующих
+  articles          ArticleComponent[] // Связь с артикулами через промежуточную таблицу
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 }
 
 model ArticleComponent {
-  id           Int       @id @default(autoincrement())
-  article      Article   @relation(fields: [articleId], references: [id])
-  articleId    Int
-  component    Component @relation(fields: [componentId], references: [id])
-  componentId  Int
-  quantity     Float       // Сколько комплектующих нужно на один артикул
+  id          Int       @id @default(autoincrement())
+  article     Article   @relation(fields: [articleId], references: [id])
+  articleId   Int
+  component   Component @relation(fields: [componentId], references: [id])
+  componentId Int
+  quantity    Float // Сколько комплектующих нужно на один артикул
 
   @@unique([articleId, componentId])
 }
 
 model Warehouse {
-  id        Int               @id @default(autoincrement())
-  name      String            @unique
-  location  String?
-  stocks    ComponentStock[]
+  id       Int              @id @default(autoincrement())
+  name     String           @unique
+  location String?
+  stocks   ComponentStock[]
+  articles ArticleStock[]
 }
 
 model ComponentStock {
-  id          Int        @id @default(autoincrement())
-  component   Component  @relation(fields: [componentId], references: [id])
+  id          Int       @id @default(autoincrement())
+  component   Component @relation(fields: [componentId], references: [id])
   componentId Int
-  warehouse   Warehouse  @relation(fields: [warehouseId], references: [id])
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
   warehouseId Int
-  count       Int        @default(0)
+  count       Int       @default(0)
 
   @@unique([componentId, warehouseId]) // уникальность: один компонент в одном складе — одна запись
 }
 
+model ArticleStock {
+  id          Int       @id @default(autoincrement())
+  article     Article   @relation(fields: [articleId], references: [id])
+  articleId   Int
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+  warehouseId Int
+  count       Int       @default(0)
 
+  @@unique([articleId, warehouseId]) // один артикул в одном складе — одна запись
+}
