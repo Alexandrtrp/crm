@@ -14,17 +14,32 @@ model User {
 }
 
 model Article {
-  id   Int    @id @default(autoincrement())
-  name String
-  count Int    @default(0)
-  components  Component[]  @relation("ArticleComponents")
+  id          Int                @id @default(autoincrement())
+  name        String
+  count       Int                @default(0) // Сколько готовых артикулов на складе
+  components  ArticleComponent[] // Связь с комплектующими через промежуточную таблицу
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 }
 
 model Component {
-  id         Int              @id @default(autoincrement())
-  name       String @unique
-  componentsInStock ComponentStock[]
-  articles   Article[]        @relation("ArticleComponents")
+  id                 Int                @id @default(autoincrement())
+  name               String             @unique
+  componentsInStock  ComponentStock[]   // Остатки комплектующих
+  articles           ArticleComponent[] // Связь с артикулами через промежуточную таблицу
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+model ArticleComponent {
+  id           Int       @id @default(autoincrement())
+  article      Article   @relation(fields: [articleId], references: [id])
+  articleId    Int
+  component    Component @relation(fields: [componentId], references: [id])
+  componentId  Int
+  quantity     Float       // Сколько комплектующих нужно на один артикул
+
+  @@unique([articleId, componentId])
 }
 
 model Warehouse {

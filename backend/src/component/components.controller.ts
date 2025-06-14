@@ -5,7 +5,7 @@ import { ComponentDto, ComponentStockDto } from './components.dto';
 
 @ApiTags('Components')
 @Controller('components')
-export class ComponentController {
+export class ComponentsController {
   constructor(private readonly componentService: ComponentsService) {}
 
   @Get()
