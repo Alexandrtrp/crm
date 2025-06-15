@@ -9,6 +9,8 @@ const Sidebar = styled.div`
   background-color: #f3f4f6;
   padding: 1rem;
   border-right: 1px solid #e5e7eb;
+  overflow: auto;
+  height: 90vh;
 `;
 
 const Item = styled.div<{ selected: boolean }>`
@@ -35,9 +37,10 @@ export const ArticleList: React.FC<Props> = ({
 }) => {
   const [filter, setFilter] = useState("");
 
-  const filteredArticles = articles.filter((a) =>
-    a.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  // const filteredArticles = articles.filter((a) =>
+  //   a.articleName.toLowerCase().includes(filter.toLowerCase())
+  // );
+  if (!articles) return <div>Загрузка...</div>;
   return (
     <Sidebar>
       <TitleH2>Артикулы</TitleH2>
@@ -47,13 +50,13 @@ export const ArticleList: React.FC<Props> = ({
         onChange={setFilter}
         placeholder="Найти артикул..."
       />
-      {filteredArticles.map((a) => (
+      {articles.map((a) => (
         <Item
           key={a.id}
           selected={a.id === selectedId}
           onClick={() => onSelect(a)}
         >
-          {a.name}
+          {a.articleName}
         </Item>
       ))}
     </Sidebar>

@@ -34,22 +34,22 @@ export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
 
   return (
     <Card>
-      <h2>{article.name}</h2>
-      <Img src={article.image} alt={article.name} />
-      <p>Состав: {article.composition}</p>
-      <p>Цена за упаковку: {article.price} ₽</p>
-      <p>На складе: {article.count}</p>
+      <h2>{article.articleName}</h2>
+      {article.stocks.map((stock) => (
+        <p>
+          На складе {stock.warehouse} : {stock.count}
+        </p>
+      ))}
       {/* <label>  */}
-        <Text>Добавить:</Text>
-        
-        <Input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
-        />
+      <Text>Добавить:</Text>
+
+      <Input
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(Number(e.target.value))}
+      />
       {/* </label> */}
       <Button onClick={() => onSubmit(article.id, amount)}>Сохранить</Button>
     </Card>
   );
 };
-

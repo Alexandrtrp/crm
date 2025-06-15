@@ -22,11 +22,10 @@ const TotalTd = styled(Td)`
 `;
 
 export const ComponentsTable = () => {
-  const [components, setComponents] = useState<any[]>([]);
+  const [components, setComponents] = useState<TComponents[]>([]);
   const [warehouses, setWarehouses] = useState<string[]>([]);
 
   const { data, error, isLoading } = useGetComponentsQuery();
-  console.log(data)
   useEffect(() => { if (error) console.error('API Error:', error) }, [error]);
 
   useEffect(() => {
