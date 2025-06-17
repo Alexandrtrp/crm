@@ -11,6 +11,18 @@ model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
+  tasks Task[]
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String   @default("pending")
+  assigneeId  Int
+  assignee    User     @relation(fields: [assigneeId], references: [id])
+  createdAt   DateTime @default(now())
+  dueDate     DateTime
 }
 
 model Article {
