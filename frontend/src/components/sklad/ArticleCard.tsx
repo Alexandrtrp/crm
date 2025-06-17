@@ -23,9 +23,7 @@ type Props = {
 
 export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
   const [amount, setAmount] = useState<number>(0);
-  const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(
-    null
-  );
+  const [selectedWarehouse, setSelectedWarehouse] = useState<number | "">("");
   const warehouses = article.stocks.map((el) => ({
     name: el.warehouse,
     id: el.warehouseId,
@@ -42,7 +40,7 @@ export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
       {/* <label>  */}
       <Text>Добавить:</Text>
       <Select
-        // value={selectedWarehouse}
+        value={selectedWarehouse}
         onChange={(e) => setSelectedWarehouse(+e.target.value)}
       >
         <option value="">Выберите склад</option>
@@ -56,8 +54,11 @@ export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
         type="text"
         value={amount}
         onChange={(e) => {
-          if(typeof e.target.value ) 
-          setAmount(Number(e.target.value))}}
+          const value = e.target.value;
+          if (/^\d*$/.test(value)) {
+            setAmount(+value);
+          }
+        }}
       />
       {/* </label> */}
       <SaveButton
@@ -67,6 +68,8 @@ export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
             return;
           }
           onSubmit(article.id, amount, selectedWarehouse);
+          setAmount(0);
+          setSelectedWarehouse("");
         }}
       >
         Сохранить

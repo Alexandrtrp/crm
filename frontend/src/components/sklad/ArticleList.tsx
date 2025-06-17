@@ -35,12 +35,13 @@ export const ArticleList: React.FC<Props> = ({
   selectedId,
   onSelect,
 }) => {
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState<string| ''>("");
 
-  // const filteredArticles = articles.filter((a) =>
-  //   a.articleName.toLowerCase().includes(filter.toLowerCase())
-  // );
-  if (!articles) return <div>Загрузка...</div>;
+  const filteredArticles = articles.filter((a) =>
+    a.articleName.toLowerCase().includes(filter.toLowerCase())
+  );
+
+
   return (
     <Sidebar>
       <TitleH2>Артикулы</TitleH2>
@@ -50,7 +51,7 @@ export const ArticleList: React.FC<Props> = ({
         onChange={setFilter}
         placeholder="Найти артикул..."
       />
-      {articles.map((a) => (
+      {filteredArticles.map((a) => (
         <Item
           key={a.id}
           selected={a.id === selectedId}
