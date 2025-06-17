@@ -9,6 +9,8 @@ const Container = styled.div`
   margin: 10px;
   overflow: auto;
   height: 90vh;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2);
 `;
 
 const Title = styled.h1`
@@ -26,7 +28,9 @@ export const ComponentsTable = () => {
   const [warehouses, setWarehouses] = useState<string[]>([]);
 
   const { data, error, isLoading } = useGetComponentsQuery();
-  useEffect(() => { if (error) console.error('API Error:', error) }, [error]);
+  useEffect(() => {
+    if (error) console.error("API Error:", error);
+  }, [error]);
 
   useEffect(() => {
     if (data) {

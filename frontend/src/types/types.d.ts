@@ -2,7 +2,8 @@ type Article = {
   id: number;
   articleName: string;
   stocks: {
-    warehouse: string;
+    warehouseId: number;
+    warehouse: number;
     count: number;
   }[];
 };

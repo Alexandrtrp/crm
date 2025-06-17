@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Input } from "../ui/Input";
 import { Text } from "../ui/Text";
+import { SaveButton } from "../ui/Button";
+import { Select } from "../ui/Select";
 
 const Card = styled.div`
   padding: 2rem;
@@ -14,42 +16,61 @@ const Img = styled.img`
   margin-bottom: 1rem;
 `;
 
-const Button = styled.button`
-  margin-top: 1rem;
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-`;
-
 type Props = {
   article: Article;
-  onSubmit: (id: number, amount: number) => void;
+  onSubmit: (id: number, amount: number, warehouseId: number) => void;
 };
 
 export const ArticleCard: React.FC<Props> = ({ article, onSubmit }) => {
   const [amount, setAmount] = useState<number>(0);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(
+    null
+  );
+  const warehouses = article.stocks.map((el) => ({
+    name: el.warehouse,
+    id: el.warehouseId,
+  }));
 
   return (
     <Card>
       <h2>{article.articleName}</h2>
       {article.stocks.map((stock) => (
-        <p>
+        <p key={stock.warehouseId}>
           На складе {stock.warehouse} : {stock.count}
         </p>
       ))}
       {/* <label>  */}
       <Text>Добавить:</Text>
-
+      <Select
+        // value={selectedWarehouse}
+        onChange={(e) => setSelectedWarehouse(+e.target.value)}
+      >
+        <option value="">Выберите склад</option>
+        {warehouses.map((w) => (
+          <option key={w.id} value={w.id}>
+            {w.name}
+          </option>
+        ))}
+      </Select>
       <Input
-        type="number"
+        type="text"
         value={amount}
-        onChange={(e) => setAmount(Number(e.target.value))}
+        onChange={(e) => {
+          if(typeof e.target.value ) 
+          setAmount(Number(e.target.value))}}
       />
       {/* </label> */}
-      <Button onClick={() => onSubmit(article.id, amount)}>Сохранить</Button>
+      <SaveButton
+        onClick={() => {
+          if (!selectedWarehouse) {
+            alert("Выберите склад");
+            return;
+          }
+          onSubmit(article.id, amount, selectedWarehouse);
+        }}
+      >
+        Сохранить
+      </SaveButton>
     </Card>
   );
 };

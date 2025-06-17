@@ -3,10 +3,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { count } from 'console';
+import { AddStockDto } from './dto/add-stock.dto';
 
 @Injectable()
 export class ArticlesService {
-  constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService) {}
   create(createArticleDto: CreateArticleDto) {
     return 'This action adds a new article';
   }
@@ -17,18 +18,41 @@ export class ArticlesService {
         stocks: {
           include: {
             warehouse: true,
-          }
-        }
-      }
-    })
-    return articles.map((article)=>({
+          },
+        },
+      },
+    });
+    return articles.map((article) => ({
       id: article.id,
       articleName: article.name,
-      stocks: article.stocks.map((stock)=>({
+      stocks: article.stocks.map((stock) => ({
+        warehouseId: stock.warehouse.id,
         warehouse: stock.warehouse.name,
         count: stock.count,
-      }))
+      })),
     }));
+  }
+
+  async addStock(dto: AddStockDto) {
+    const { articleId, warehouseId, amount } = dto;
+    return this.prisma.articleStock.upsert({
+      where: {
+        articleId_warehouseId: {
+          articleId: Number(articleId),
+          warehouseId: Number(warehouseId), // 👈 вот здесь!
+        },
+      },
+      update: {
+        count: {
+          increment: amount,
+        },
+      },
+      create: {
+        articleId: Number(articleId),
+        warehouseId: Number(warehouseId), // 👈 и здесь
+        count: amount,
+      },
+    });
   }
 
   findOne(id: number) {

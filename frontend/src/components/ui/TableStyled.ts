@@ -5,7 +5,8 @@ export const Table = styled.table`
   border-collapse: collapse;
   font-size: 0.875rem;
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
   border-radius: 4px;
 `;
 
@@ -17,7 +18,7 @@ export const TableRow = styled.tr`
   &:nth-child(even) {
     background-color: #fafafa;
   }
-  
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.04);
     transition: background-color 0.2s ease;
