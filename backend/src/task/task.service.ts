@@ -8,7 +8,7 @@ import { Task } from '@prisma/client';
 export class TaskService {
   constructor(private prisma: PrismaService) {}
 
-  create(dto: CreateTaskDto): Promise<Task> {
+  async create(dto: CreateTaskDto): Promise<Task> {
     return this.prisma.task.create({
       data: {
         title: dto.title,

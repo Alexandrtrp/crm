@@ -1,28 +1,28 @@
 import React from 'react';
+import styled from 'styled-components';
+import { TaskCard } from './TaskCard';
 import { useGetTasksQuery, useUpdateTaskStatusMutation } from '../../store/taskApi';
+
+const ListWrapper = styled.div`
+  padding: 1rem;
+`;
 
 export const TaskList: React.FC = () => {
   const { data: tasks, isLoading, error } = useGetTasksQuery();
   const [updateStatus] = useUpdateTaskStatusMutation();
 
+  const handleComplete = (id: number) => {
+    updateStatus({ id, status: 'done' });
+  };
+
   if (isLoading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка загрузки</p>;
 
   return (
-    <ul>
-      {tasks?.map((task) => (
-        <li key={task.id}>
-          <h3>{task.title}</h3>
-          <p>{task.description}</p>
-          <p>Исполнитель: {task.assignee.name}</p>
-          <p>Статус: {task.status}</p>
-          <button
-            onClick={() => updateStatus({ id: task.id, status: 'done' })}
-          >
-            Отметить как выполнено
-          </button>
-        </li>
+    <ListWrapper>
+      {tasks?.map((task: TTask) => (
+        <TaskCard key={task.id} task={task} onComplete={handleComplete} />
       ))}
-    </ul>
+    </ListWrapper>
   );
 };

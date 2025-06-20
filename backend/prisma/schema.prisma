@@ -7,11 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
-  tasks Task[]
+  tasks    Task[]  @relation("UserTasks")
+  role  Role    @default(USER)
 }
 
 model Task {
@@ -20,7 +26,7 @@ model Task {
   description String
   status      String   @default("pending")
   assigneeId  Int
-  assignee    User     @relation(fields: [assigneeId], references: [id])
+  assignee    User     @relation("UserTasks", fields: [assigneeId], references: [id]) 
   createdAt   DateTime @default(now())
   dueDate     DateTime
 }

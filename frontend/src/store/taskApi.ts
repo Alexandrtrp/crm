@@ -1,14 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
-  assignee: { id: number; name: string };
-  dueDate: string;
-}
-
 interface CreateTaskDto {
   title: string;
   description: string;
@@ -26,11 +17,11 @@ export const taskApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "api/" }),
   tagTypes: ["Tasks"],
   endpoints: (buider) => ({
-    getTasks: buider.query<Task[], void>({
+    getTasks: buider.query<TTask[], void>({
       query: () => "tasks",
       providesTags: ["Tasks"],
     }),
-    createTask: buider.mutation<Task, CreateTaskDto>({
+    createTask: buider.mutation<TTask, CreateTaskDto>({
       query: (body) => ({
         url: "tasks",
         method: "POST",
@@ -38,7 +29,7 @@ export const taskApi = createApi({
       }),
       invalidatesTags: ["Tasks"],
     }),
-    updateTaskStatus: buider.mutation<Task, { id: number; status: string }>({
+    updateTaskStatus: buider.mutation<TTask, { id: number; status: string }>({
       query: ({ id, status }) => ({
         url: `tasks/${id}/status`,
         method: "PATCH",
