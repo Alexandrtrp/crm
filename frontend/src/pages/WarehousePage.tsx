@@ -1,8 +1,8 @@
 // 📁 WarehousePage.tsx
 import React from "react";
 import styled from "styled-components";
-import { ComponentsTable } from "../components/sklad/ComponentsTable";
-import { ArtilceMain } from "../components/sklad/ArticleMain";
+import { ComponentsTable } from "../components/Sklad/ComponentsTable";
+import { ArtilceMain } from "../components/Sklad/ArticleMain";
 
 const Wrapper = styled.div`
   display: grid;

@@ -23,7 +23,7 @@ type TComponent = {
 
 type TWarehouse = {
   id: number;
-  nane: string;
+  name: string;
   location?: string;
 };
 

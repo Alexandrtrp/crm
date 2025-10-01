@@ -27,20 +27,20 @@ export const ComponentsTable = () => {
   const [components, setComponents] = useState<TComponents[]>([]);
   const [warehouses, setWarehouses] = useState<string[]>([]);
 
-  const { data, error, isLoading } = useGetComponentsQuery();
+  const { data, isError, isLoading } = useGetComponentsQuery();
+
   useEffect(() => {
-    if (error) console.error("API Error:", error);
-  }, [error]);
+    if (isError) console.error("API isError:", isError);
+  }, [isError]);
 
   useEffect(() => {
     if (data) {
       setComponents(data);
 
-      // Получаем уникальные названия складов из данных
       const uniqueWarehouses: string[] = Array.from(
         new Set(
-          data.flatMap((c: any) =>
-            c.componentsInStock.map((s: any) => s.warehouse.name)
+          data.flatMap((component) =>
+            component.componentsInStock.map((el) => el.warehouse.name)
           )
         )
       );
@@ -49,7 +49,7 @@ export const ComponentsTable = () => {
   }, [data]);
 
   if (isLoading) return <div>Загрузка...</div>;
-  if (error) return <div>Ошибка загрузки данных</div>;
+  if (isError) return <div>Ошибка загрузки данных</div>;
 
   return (
     <Container>
@@ -65,10 +65,10 @@ export const ComponentsTable = () => {
           </tr>
         </Thead>
         <tbody>
-          {components.map((component: any) => {
+          {components.map((component) => {
             const stockMap: Record<string, number> = {};
-            component.componentsInStock.forEach((s: any) => {
-              stockMap[s.warehouse.name] = s.count;
+            component.componentsInStock.forEach((el) => {
+              stockMap[el.warehouse.name] = el.count;
             });
 
             const total = warehouses.reduce(
@@ -80,7 +80,7 @@ export const ComponentsTable = () => {
               <TableRow key={component.id}>
                 <Td style={{ textAlign: "left" }}>{component.name}</Td>
                 {warehouses.map((wh) => (
-                  <Td key={wh}>{stockMap[wh] || 0}</Td>
+                  <Td>{stockMap[wh] || 0}</Td>
                 ))}
                 <TotalTd>{total}</TotalTd>
               </TableRow>

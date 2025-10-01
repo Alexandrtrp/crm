@@ -1,8 +1,7 @@
-// 📁 ui/Snackbar.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const SnackbarWrapper = styled.div`
+const SnackbarWrapper = styled.div<{ $visible: boolean }>`
   position: fixed;
   bottom: 30px;
   left: 50%;
@@ -12,29 +11,29 @@ const SnackbarWrapper = styled.div`
   padding: 1rem 2rem;
   border-radius: 8px;
   z-index: 1000;
-  animation: fadein 0.3s, fadeout 0.3s 4.7s;
-
-  @keyframes fadein {
-    from { opacity: 0; transform: translateY(20px) translateX(-50%); }
-    to   { opacity: 1; transform: translateY(0) translateX(-50%); }
-  }
-
-  @keyframes fadeout {
-    from { opacity: 1; }
-    to   { opacity: 0; }
-  }
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity 0.3s ease;
 `;
 
 type Props = {
   message: string;
-  onClose: () => void;
+  duration?: number;
+  onClose?: () => void; 
 };
 
-export const Snackbar: React.FC<Props> = ({ message, onClose }) => {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+export const Snackbar: React.FC<Props> = ({ message, duration = 5000, onClose }) => {
+  const [visible, setVisible] = useState(true);
 
-  return <SnackbarWrapper>{message}</SnackbarWrapper>;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+      if (onClose) onClose();
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, [duration, onClose]);
+
+  if (!visible) return null;
+
+  return <SnackbarWrapper $visible={visible}>{message}</SnackbarWrapper>;
 };
