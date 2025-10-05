@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import debounce from "lodash.debounce";
-import { Input } from "./ui/Input";
+import { Input } from "../ui/Input";
 
 type Props = {
   value: string;
@@ -25,7 +25,7 @@ export const FilterInput: React.FC<Props> = ({
     handler();
 
     return () => {
-      handler.cancel(); // Отменяем при размонтировании или новом вводе
+      handler.cancel();
     };
   }, [localValue, onChange, debounceDelay]);
 

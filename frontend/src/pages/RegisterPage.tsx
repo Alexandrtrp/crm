@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Label } from "../components/ui/Label";
-import { Input } from "../components/ui/Input";
-import { Button } from "../components/ui/Button";
-import { Text } from "../components/ui/Text";
-import { Link } from "../components/ui/Link";
-import { Form } from "../components/ui/Form";
+import { Label } from "../ui/Label";
+import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
+import { Text } from "../ui/Text";
+import { Link } from "../ui/Link";
+import { Form } from "../ui/Form";
 
 const PageWrapper = styled.div`
   min-height: 100vh;

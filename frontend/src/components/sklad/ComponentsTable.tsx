@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useGetComponentsQuery } from "../../store/componentsApi";
-import { Table, TableRow, Td, Th, Thead } from "../ui/TableStyled";
+import { Table, TableRow, Td, Th, Thead } from "../../ui/TableStyled";
 
 // Стили
 const Container = styled.div`

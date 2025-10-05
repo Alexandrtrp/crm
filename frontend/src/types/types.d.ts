@@ -1,5 +1,5 @@
 type Article = {
-  id: number;
+  id: string;
   articleName: string;
   stocks: {
     warehouseId: number;
@@ -10,25 +10,25 @@ type Article = {
 
 type TComponents = {
   name: string;
-  id: number;
+  id: string;
   componentsInStock: TComponent[];
 };
 
 type TComponent = {
-  id: number;
+  id: string;
   count: number;
   componentId: number;
   warehouse: TWarehouse;
 };
 
 type TWarehouse = {
-  id: number;
+  id: string;
   name: string;
   location?: string;
 };
 
 type TTask = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   status: string;

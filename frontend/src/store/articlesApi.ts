@@ -9,7 +9,7 @@ export const articlesApi = createApi({
       query: () => "",
       providesTags: ['Articles'],
     }),
-    addStock: builder.mutation< void, { articleId: number; amount: number; warehouseId: number } >({
+    addStock: builder.mutation< void, { articleId: string; amount: number; warehouseId: number } >({
       query: (body)=> ({
         url: '/add-stock',
         method: 'POST',

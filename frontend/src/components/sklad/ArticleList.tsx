@@ -1,8 +1,8 @@
 // 📁 components/ArticleList.tsx
 import React, { useState } from "react";
 import styled from "styled-components";
-import { TitleH2 } from "../ui/TitleH2";
-import { Label } from "../ui/Label";
+import { TitleH2 } from "../../ui/TitleH2";
+import { Label } from "../../ui/Label";
 import { FilterInput } from "../FilterInput";
 
 const Sidebar = styled.div`
@@ -26,7 +26,7 @@ const Item = styled.div<{ selected: boolean }>`
 
 type Props = {
   articles: Article[];
-  selectedId: number | undefined;
+  selectedId: string | undefined;
   onSelect: (article: Article) => void;
 };
 
@@ -37,8 +37,8 @@ export const ArticleList: React.FC<Props> = ({
 }) => {
   const [filter, setFilter] = useState<string| ''>("");
 
-  const filteredArticles = articles.filter((a) =>
-    a.articleName.toLowerCase().includes(filter.toLowerCase())
+  const filteredArticles = articles.filter((item) =>
+    item.articleName.toLowerCase().includes(filter.toLowerCase())
   );
 
 
@@ -51,13 +51,13 @@ export const ArticleList: React.FC<Props> = ({
         onChange={setFilter}
         placeholder="Найти артикул..."
       />
-      {filteredArticles.map((a) => (
+      {filteredArticles.map((item) => (
         <Item
-          key={a.id}
-          selected={a.id === selectedId}
-          onClick={() => onSelect(a)}
+          key={item.id}
+          selected={item.id === selectedId}
+          onClick={() => onSelect(item)}
         >
-          {a.articleName}
+          {item.articleName}
         </Item>
       ))}
     </Sidebar>
