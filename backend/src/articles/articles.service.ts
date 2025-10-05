@@ -38,8 +38,8 @@ export class ArticlesService {
     return this.prisma.articleStock.upsert({
       where: {
         articleId_warehouseId: {
-          articleId: Number(articleId),
-          warehouseId: Number(warehouseId), // 👈 вот здесь!
+          articleId: articleId,
+          warehouseId: warehouseId,
         },
       },
       update: {
@@ -48,8 +48,8 @@ export class ArticlesService {
         },
       },
       create: {
-        articleId: Number(articleId),
-        warehouseId: Number(warehouseId), // 👈 и здесь
+        articleId: articleId,
+        warehouseId: warehouseId,
         count: amount,
       },
     });

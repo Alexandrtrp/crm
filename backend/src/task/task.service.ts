@@ -29,7 +29,7 @@ export class TaskService {
     });
   }
 
-  async updateStatus(id: number, status: string): Promise<Task> {
+  async updateStatus(id: string, status: string): Promise<Task> {
     return this.prisma.task.update({
       where: { id },
       data: { status },

@@ -14,7 +14,7 @@ async function main() {
   const warehouseNames = Object.keys(data[0]).filter((key) => key !== 'name');
 
   // Создаём или находим склады
-  const warehousesMap: Record<string, { id: number }> = {};
+  const warehousesMap: Record<string, { id: string }> = {};
   for (const name of warehouseNames) {
     const warehouse = await prisma.warehouse.upsert({
       where: { name },

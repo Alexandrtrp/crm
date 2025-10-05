@@ -13,81 +13,81 @@ enum Role {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-   password String 
-  tasks    Task[]  @relation("UserTasks")
-  role  Role    @default(USER)
+  id       String @id @default(uuid())
+  email    String @unique
+  name     String?
+  password String
+  tasks    Task[] @relation("UserTasks")
+  role     Role   @default(USER)
 }
 
 model Task {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   title       String
   description String
   status      String   @default("pending")
-  assigneeId  Int
-  assignee    User     @relation("UserTasks", fields: [assigneeId], references: [id]) 
+  assigneeId  String
+  assignee    User     @relation("UserTasks", fields: [assigneeId], references: [id])
   createdAt   DateTime @default(now())
   dueDate     DateTime
 }
 
 model Article {
-  id         Int                @id @default(autoincrement())
-  name      String  @unique
-  count      Int                @default(0) // Сколько готовых артикулов на складе
+  id         String            @id @default(uuid())
+  name       String            @unique
+  count      Int               @default(0) // Сколько готовых артикулов на складе
   components ArticleComponent[] // Связь с комплектующими через промежуточную таблицу
   stocks     ArticleStock[]
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
 }
 
 model Component {
-  id                Int                @id @default(autoincrement())
-  name              String             @unique
+  id                String           @id @default(uuid())
+  name              String           @unique
   componentsInStock ComponentStock[] // Остатки комплектующих
   articles          ArticleComponent[] // Связь с артикулами через промежуточную таблицу
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }
 
 model ArticleComponent {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   article     Article   @relation(fields: [articleId], references: [id])
-  articleId   Int
+  articleId   String
   component   Component @relation(fields: [componentId], references: [id])
-  componentId Int
-  quantity    Float // Сколько комплектующих нужно на один артикул
+  componentId String
+  quantity    Float     // Сколько комплектующих нужно на один артикул
 
   @@unique([articleId, componentId])
 }
 
 model Warehouse {
-  id       Int              @id @default(autoincrement())
-  name     String           @unique
+  id       String          @id @default(uuid())
+  name     String          @unique
   location String?
   stocks   ComponentStock[]
   articles ArticleStock[]
 }
 
 model ComponentStock {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   component   Component @relation(fields: [componentId], references: [id])
-  componentId Int
+  componentId String
   warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
-  warehouseId Int
+  warehouseId String
   count       Int       @default(0)
 
-  @@unique([componentId, warehouseId]) // уникальность: один компонент в одном складе — одна запись
+  @@unique([componentId, warehouseId])
 }
 
 model ArticleStock {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   article     Article   @relation(fields: [articleId], references: [id])
-  articleId   Int
+  articleId   String
   warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
-  warehouseId Int
+  warehouseId String
   count       Int       @default(0)
 
-  @@unique([articleId, warehouseId]) // один артикул в одном складе — одна запись
+  @@unique([articleId, warehouseId])
 }

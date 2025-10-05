@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 // DTO для склада
 export class WarehouseDto {
   @ApiProperty({ example: 1, description: 'ID склада' })
-  id: number;
+  id: string;
 
   @ApiProperty({ example: 'Основной склад', description: 'Название склада' })
   name: string;
@@ -20,7 +20,7 @@ export class WarehouseDto {
 // DTO для информации о наличии компонента на складе
 export class ComponentStockDto {
   @ApiProperty({ example: 1, description: 'ID записи о наличии' })
-  id: number;
+  id: string;
 
   @ApiProperty({ example: 5, description: 'Количество компонентов на складе' })
   count: number;
@@ -33,7 +33,7 @@ export class ComponentStockDto {
 // Основной DTO для компонента
 export class ComponentDto {
   @ApiProperty({ example: 1, description: 'ID компонента' })
-  id: number;
+  id: string;
 
   @ApiProperty({ 
     example: 'Резистор 10кОм', 

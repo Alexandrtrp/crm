@@ -1,11 +1,11 @@
 import { Type } from 'class-transformer';
 
 export class AddStockDto {
-  @Type(() => Number)
-  articleId: number;
+  @Type(() => String)
+  articleId: string;
 
-  @Type(() => Number)
-  warehouseId: number;
+  @Type(() => String)
+  warehouseId: string;
 
   @Type(() => Number)
   amount: number;
