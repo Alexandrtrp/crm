@@ -1,37 +1,14 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useEffect, useState, useMemo } from "react";
+import { Table, Typography, Spin, Alert } from "antd";
 import { useGetComponentsQuery } from "../../store/componentsApi";
-import { Table, TableRow, Td, Th, Thead } from "../../ui/TableStyled";
 
-// Стили
-const Container = styled.div`
-  padding: 24px;
-  margin: 10px;
-  overflow: auto;
-  height: 90vh;
-  box-sizing: border-box;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2);
-`;
-
-const Title = styled.h1`
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 16px;
-`;
-
-const TotalTd = styled(Td)`
-  font-weight: 600;
-`;
+const { Title } = Typography;
 
 export const ComponentsTable = () => {
   const [components, setComponents] = useState<TComponents[]>([]);
   const [warehouses, setWarehouses] = useState<string[]>([]);
 
   const { data, isError, isLoading } = useGetComponentsQuery();
-
-  useEffect(() => {
-    if (isError) console.error("API isError:", isError);
-  }, [isError]);
 
   useEffect(() => {
     if (data) {
@@ -44,50 +21,74 @@ export const ComponentsTable = () => {
           )
         )
       );
+
       setWarehouses(uniqueWarehouses);
     }
   }, [data]);
 
-  if (isLoading) return <div>Загрузка...</div>;
-  if (isError) return <div>Ошибка загрузки данных</div>;
+  const columns = useMemo(() => {
+    const stockColumns = warehouses.map((wh) => ({
+      title: wh,
+      dataIndex: wh,
+      key: wh,
+      align: "center" as const,
+    }));
+
+    return [
+      {
+        title: "Комплектующее",
+        dataIndex: "name",
+        key: "name",
+        align: "left" as const,
+      },
+      ...stockColumns,
+      {
+        title: "Всего",
+        dataIndex: "total",
+        key: "total",
+        align: "center" as const,
+        render: (value: number) => <b>{value}</b>,
+      },
+    ];
+  }, [warehouses]);
+
+  const tableData = useMemo(() => {
+    return components.map((component) => {
+      const stockMap: Record<string, number> = {};
+      component.componentsInStock.forEach((el) => {
+        stockMap[el.warehouse.name] = el.count;
+      });
+
+      const total = warehouses.reduce(
+        (sum, wh) => sum + (stockMap[wh] || 0),
+        0
+      );
+
+      return {
+        key: component.id,
+        name: component.name,
+        ...stockMap,
+        total,
+      };
+    });
+  }, [components, warehouses]);
+
+  
+  if (isLoading) return <Spin tip="Загрузка..." />;
+  if (isError) return <Alert type="error" message="Ошибка загрузки данных" />;
 
   return (
-    <Container>
-      <Title>Складской учёт комплектующих</Title>
-      <Table>
-        <Thead>
-          <tr>
-            <Th>Комплектующее</Th>
-            {warehouses.map((wh) => (
-              <Th key={wh}>{wh}</Th>
-            ))}
-            <Th>Всего</Th>
-          </tr>
-        </Thead>
-        <tbody>
-          {components.map((component) => {
-            const stockMap: Record<string, number> = {};
-            component.componentsInStock.forEach((el) => {
-              stockMap[el.warehouse.name] = el.count;
-            });
-
-            const total = warehouses.reduce(
-              (sum, wh) => sum + (stockMap[wh] || 0),
-              0
-            );
-
-            return (
-              <TableRow key={component.id}>
-                <Td style={{ textAlign: "left" }}>{component.name}</Td>
-                {warehouses.map((wh) => (
-                  <Td>{stockMap[wh] || 0}</Td>
-                ))}
-                <TotalTd>{total}</TotalTd>
-              </TableRow>
-            );
-          })}
-        </tbody>
-      </Table>
-    </Container>
+    <div style={{ padding: 24, overflow: "auto", height: "90vh" }}>
+      <Title level={3} style={{ marginBottom: 16 }}>
+        Складской учёт комплектующих
+      </Title>
+      <Table
+        columns={columns}
+        dataSource={tableData}
+        pagination={false}
+        scroll={{ y: "75vh" }}
+        bordered
+      />
+    </div>
   );
 };

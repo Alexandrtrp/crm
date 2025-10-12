@@ -1,23 +1,9 @@
 import React, { useCallback } from 'react';
-import styled from 'styled-components';
-import { Input } from '../../ui/Input';
-import { Text } from '../../ui/Text';
-import { Button } from '../../ui/Button';
-import { Select } from '../../ui/Select';
+import { Button, Card, Form, Input, Select, Typography, message } from 'antd';
 import { useAddStockMutation } from '../../store/articlesApi';
-import { Snackbar } from '../../ui/Snackbar';
-import Form, { Field, useForm, useWatch } from 'rc-field-form';
-import { FieldError } from '../../ui/FieldError';
 
-const Card = styled.div`
-  padding: 2rem;
-`;
-
-const Img = styled.img`
-  width: 200px;
-  height: auto;
-  margin-bottom: 1rem;
-`;
+const { Text } = Typography;
+const { Option } = Select;
 
 type ArticleCardProps = {
   article: Article;
@@ -29,39 +15,34 @@ type FormData = {
 };
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+  const [form] = Form.useForm<FormData>();
+  const [addStock, { isLoading }] = useAddStockMutation();
+
   const warehouses = article.stocks.map((el) => ({
     name: el.warehouse,
     id: el.warehouseId,
   }));
 
-  const [form] = useForm<FormData>();
-  const [addStock, { isLoading, isError }] = useAddStockMutation();
-
-  const values = useWatch([], form);
-
   const onFinish = useCallback(
     async (values: FormData) => {
-      await addStock({
-        articleId: article.id,
-        warehouseId: values.warehouseId,
-        amount: Number(values.amount),
-      }).unwrap();
+      try {
+        await addStock({
+          articleId: article.id,
+          warehouseId: values.warehouseId,
+          amount: Number(values.amount),
+        }).unwrap();
 
-      form.resetFields();
+        message.success('Количество успешно добавлено');
+        form.resetFields();
+      } catch {
+        message.error('Ошибка при сохранении');
+      }
     },
-    [form, article.id, addStock],
+    [addStock, article.id, form],
   );
-
-  const hasErrors = form.getFieldsError().some(({ errors }) => errors.length > 0);
-
-  const isTouched = form.isFieldsTouched(true);
-
-  const isDisabled =
-    isLoading || !isTouched || hasErrors || !values?.warehouseId || !values?.amount;
 
   return (
     <Card>
-      {isError && <Snackbar message="Ошибка при добавлении" />}
       <h2>{article.articleName}</h2>
 
       {article.stocks.map((stock) => (
@@ -70,53 +51,45 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
         </p>
       ))}
 
-      <Text>Добавить:</Text>
+      <Text strong>Добавить:</Text>
 
-      <Form form={form} onFinish={onFinish}>
-        <Field name="warehouseId" rules={[{ required: true, message: 'Выберите склад' }]}>
-          {({ value, onChange }, meta) => (
-            <div>
-              <Select value={value ?? ''} onChange={(e) => onChange(Number(e.target.value))}>
-                <option value="">Выберите склад</option>
-                {warehouses.map((w) => (
-                  <option key={w.id} value={w.id}>
-                    {w.name}
-                  </option>
-                ))}
-              </Select>
-              {meta.touched && meta.errors.length > 0 && <FieldError>{meta.errors[0]}</FieldError>}
-            </div>
-          )}
-        </Field>
+      <Form
+        form={form}
+        onFinish={onFinish}
+        layout="vertical"
+        style={{ marginTop: '1rem' }}
+      >
+        <Form.Item
+          name="warehouseId"
+          label="Склад"
+          rules={[{ required: true, message: 'Выберите склад' }]}
+        >
+          <Select placeholder="Выберите склад">
+            {warehouses.map((wh) => (
+              <Option key={wh.id} value={wh.id}>
+                {wh.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-        <Field
+        <Form.Item
           name="amount"
+          label="Количество"
           rules={[
-            { required: true, message: 'Введите количество' },
-            {
-              validator: (_, value) =>
-                value && Number(value) > 0
-                  ? Promise.resolve()
-                  : Promise.reject('Введите положительное число'),
-            },
+            { required: true, type: 'number', min: 1, transform: Number, message: 'Введите положительное число' },
           ]}
         >
-          {({ value, onChange }, meta) => (
-            <div>
-              <Input
-                type="number"
-                min="1"
-                value={value ?? ''}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder="Количество"
-              />
-              {meta.touched && meta.errors.length > 0 && <FieldError>{meta.errors[0]}</FieldError>}
-            </div>
-          )}
-        </Field>
+          <Input type="number" placeholder="Введите количество" />
+        </Form.Item>
 
-        <Button type="submit" disabled={isDisabled}>
-          {isLoading ? 'Сохраняем...' : 'Сохранить'}
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isLoading}
+          disabled={isLoading}
+        >
+          Сохранить
         </Button>
       </Form>
     </Card>

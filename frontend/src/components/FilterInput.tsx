@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { Input } from "antd";
 import debounce from "lodash.debounce";
-import { Input } from "../ui/Input";
 
 type Props = {
   value: string;
@@ -17,24 +17,30 @@ export const FilterInput: React.FC<Props> = ({
 }) => {
   const [localValue, setLocalValue] = useState(value);
 
+  const debouncedChange = useMemo(
+    () =>
+      debounce((val: string) => {
+        onChange(val);
+      }, debounceDelay),
+    [onChange, debounceDelay]
+  );
+
   useEffect(() => {
-    const handler = debounce(() => {
-      onChange(localValue);
-    }, debounceDelay);
-
-    handler();
-
+    debouncedChange(localValue);
     return () => {
-      handler.cancel();
+      debouncedChange.cancel();
     };
-  }, [localValue, onChange, debounceDelay]);
+  }, [localValue, debouncedChange]);
 
   return (
-    <Input
-      type="text"
-      value={localValue}
-      onChange={(e) => setLocalValue(e.target.value)}
-      placeholder={placeholder}
-    />
+    <div style={{ overflow: "hidden" }}>
+      <Input
+        value={localValue}
+        onChange={(e) => setLocalValue(e.target.value)}
+        placeholder={placeholder}
+        allowClear
+        style={{ width: "100%", }}
+      />
+    </div>
   );
 };

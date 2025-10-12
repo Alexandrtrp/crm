@@ -1,61 +1,51 @@
 import React from "react";
-import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { Layout, Menu, Typography } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Nav = styled.nav`
-  background-color: ${({ theme }) => theme.colors.primary};
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const Logo = styled.div`
-  color: white;
-  font-size: 1.25rem;
-  font-weight: bold;
-`;
-
-const Menu = styled.div`
-  display: flex;
-  gap: 1.5rem;
-`;
-
-const StyledLink = styled(NavLink)`
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 1rem;
-  position: relative;
-  padding-bottom: 2px;
-
-  &.active {
-    border-bottom: 2px solid white;
-  }
-
-  &:hover {
-    opacity: 0.85;
-  }
-`;
+const { Header } = Layout;
+const { Text } = Typography;
 
 export const Navbar: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const menuItems = [
+    { key: "/", label: "Главная" },
+    { key: "/warehouse", label: "Складской учёт" },
+    { key: "/tasks", label: "Задачи" },
+    { key: "/profile", label: "Профиль" },
+  ];
+
+  const activeItem = menuItems.find((item) =>
+    item.key === "/" ? location.pathname === "/" : location.pathname.startsWith(item.key)
+  );
+  const activeKey = activeItem?.key;
+
   return (
-    <Nav>
-      <Logo>CRM</Logo>
-      <Menu>
-        <StyledLink to="/" end>
-          Главная
-        </StyledLink>
-        <StyledLink to="/warehouse">
-          Складской учёт
-        </StyledLink>
-        <StyledLink to="/tasks">
-          Задачи
-        </StyledLink>
-        <StyledLink to="/profile">
-          Профиль
-        </StyledLink>
-      </Menu>
-    </Nav>
+    <Header
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "#1890ff",
+        padding: "0 2rem",
+      }}
+    >
+      <Text style={{ color: "#fff", fontSize: "1.5rem", fontWeight: 700 }}>
+        CRM
+      </Text>
+
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        selectedKeys={[activeKey || ""]}
+        onClick={(e) => navigate(e.key)}
+        items={menuItems.map((item) => ({
+          key: item.key,
+          label: item.label,
+        }))}
+        style={{ backgroundColor: "#1890ff", borderBottom: "none" }}
+      />
+    </Header>
   );
 };
