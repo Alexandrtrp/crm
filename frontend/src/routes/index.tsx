@@ -7,7 +7,7 @@ import { ProfilePage } from '../pages/ProfilePage';
 import { WarehousePage } from '../pages/WarehousePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { DashboardLayout } from '../layouts/DashboardLayout';
-import { TasksPage } from '../pages/TasksPage';
+import { TaskPage } from '../pages/TasksPage';
 
 export const router = createBrowserRouter([
   {
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
           // { path: "profile", element: <ProfilePage /> },
           { path: 'warehouse', element: <WarehousePage /> },
           { path: 'warehouse/:articleId', element: <WarehousePage /> },
-          { path: 'tasks', element: <TasksPage /> },
+          { path: 'tasks', element: <TaskPage /> },
         ],
       },
     ],

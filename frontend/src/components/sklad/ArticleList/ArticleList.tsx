@@ -20,8 +20,7 @@ export const ArticleList: React.FC<Props> = ({ articles, selectedId, onSelect })
   );
 
   return (
-    <Sider
-      width={300}
+    <div
       style={{
         background: '#fafafa',
         padding: '1rem',
@@ -30,6 +29,7 @@ export const ArticleList: React.FC<Props> = ({ articles, selectedId, onSelect })
         display: 'flex',
         flexDirection: 'column',
         overflowX: 'hidden',
+        width: '200px'
       }}
     >
       <Text strong style={{ fontSize: 16, marginBottom: 8, display: 'block' }}>
@@ -58,6 +58,6 @@ export const ArticleList: React.FC<Props> = ({ articles, selectedId, onSelect })
           )}
         />
       </div>
-    </Sider>
+    </div>
   );
 };

@@ -1,28 +1,62 @@
 import React from 'react';
-import styled from 'styled-components';
+import { Card, Col, Row, Spin, Typography, Empty, message } from 'antd';
 import { TaskCard } from './TaskCard';
 import { useGetTasksQuery, useUpdateTaskStatusMutation } from '../../store/taskApi';
 
-const ListWrapper = styled.div`
-  padding: 1rem;
-`;
+const { Title } = Typography;
 
 export const TaskList: React.FC = () => {
   const { data: tasks, isLoading, error } = useGetTasksQuery();
   const [updateStatus] = useUpdateTaskStatusMutation();
 
-  const handleComplete = (id: number) => {
-    updateStatus({ id, status: 'done' });
+  const handleStatusChange = async (id: string, status: string) => {
+    try {
+      await updateStatus({ id, status }).unwrap();
+      message.success('Статус задачи обновлён');
+    } catch {
+      message.error('Ошибка при обновлении статуса');
+    }
   };
 
-  if (isLoading) return <p>Загрузка...</p>;
-  if (error) return <p>Ошибка загрузки</p>;
+  if (isLoading) return <Spin size="large" style={{ display: 'block', margin: '3rem auto' }} />;
+  if (error) return <Empty description="Ошибка загрузки задач" />;
+
+  const columns = [
+    { title: 'К выполнению', status: 'todo', color: '#faad14' },
+    { title: 'В процессе', status: 'in_progress', color: '#1890ff' },
+    { title: 'Выполнено', status: 'done', color: '#52c41a' },
+  ];
 
   return (
-    <ListWrapper>
-      {tasks?.map((task: TTask) => (
-        <TaskCard key={task.id} task={task} onComplete={handleComplete} />
+    <Row gutter={16} style={{ padding: '1rem', overflowX: 'hidden', marginRight: 0, marginLeft: 0 }}>
+      {columns.map((col) => (
+        <Col span={8} key={col.status}>
+          <Card
+            title={<Title level={4} style={{ color: col.color }}>{col.title}</Title>}
+            bordered
+            style={{
+              background: '#fafafa',
+              minHeight: '80vh',
+              borderRadius: '10px',
+              borderWidth: '4px'
+            }}
+          >
+            {tasks?.filter((t) => t.status === col.status).length ? (
+              tasks
+                .filter((t) => t.status === col.status)
+                .map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onStatusChange={handleStatusChange}
+                  />
+                ))
+            ) : (
+              <Empty description="Нет задач" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            )}
+          </Card>
+        </Col>
       ))}
-    </ListWrapper>
+    </Row>
   );
 };

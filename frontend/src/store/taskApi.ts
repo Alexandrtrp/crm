@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 interface CreateTaskDto {
   title: string;
   description: string;
-  assigneeId: number;
+  assigneeId: string;
   dueDate: string;
   status?: string;
 }
@@ -29,7 +29,7 @@ export const taskApi = createApi({
       }),
       invalidatesTags: ["Tasks"],
     }),
-    updateTaskStatus: buider.mutation<TTask, { id: number; status: string }>({
+    updateTaskStatus: buider.mutation<TTask, { id: string; status: string }>({
       query: ({ id, status }) => ({
         url: `tasks/${id}/status`,
         method: "PATCH",

@@ -36,7 +36,7 @@ export const ComponentsTable = () => {
 
     return [
       {
-        title: "Комплектующее",
+        title: "Комплектующие",
         dataIndex: "name",
         key: "name",
         align: "left" as const,
@@ -78,7 +78,7 @@ export const ComponentsTable = () => {
   if (isError) return <Alert type="error" message="Ошибка загрузки данных" />;
 
   return (
-    <div style={{ padding: 24, overflow: "auto", height: "90vh" }}>
+    <div style={{ padding: 24, height: "90vh" }}>
       <Title level={3} style={{ marginBottom: 16 }}>
         Складской учёт комплектующих
       </Title>
