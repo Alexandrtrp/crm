@@ -1,7 +1,7 @@
 export class CreateTaskDto {
   title: string;
   description: string;
-  status?: string; // default to "pending"
+  status?: string; 
   assigneeId: string;
-  dueDate: string; // ISO string
+  dueDate: string; 
 }
