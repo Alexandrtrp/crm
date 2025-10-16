@@ -1,17 +1,34 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { TUser } from '../types/types';
+
 
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
     baseUrl: '/api',
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as any).auth?.token;
+      const token = (getState() as any).auth?.token || localStorage.getItem('token');
       if (token) headers.set('authorization', `Bearer ${token}`);
       return headers;
     },
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
+    login: builder.mutation<{ access_token: string; user: TUser }, { email: string; password: string }>({
+      query: (body) => ({
+        url: '/auth/login',
+        method: 'POST',
+        body,
+      }),
+    }),
+    register: builder.mutation<{ access_token: string; user: TUser }, { name: string; email: string; password: string }>({
+      query: (body) => ({
+        url: '/auth/register',
+        method: 'POST',
+        body,
+      }),
+    }),
+
     getUsers: builder.query<TUser[], void>({
       query: () => '/users',
       providesTags: ['User'],
@@ -50,6 +67,8 @@ export const userApi = createApi({
 });
 
 export const {
+  useLoginMutation,
+  useRegisterMutation,
   useGetUsersQuery,
   useGetUserByIdQuery,
   useCreateUserMutation,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Button, Tag, Space, Typography } from 'antd';
+import type { TTask } from '../../types/types';
 
 const { Text, Paragraph } = Typography;
 
@@ -10,8 +11,8 @@ type Props = {
 
 export const TaskCard: React.FC<Props> = ({ task, onStatusChange }) => {
   const nextStatus =
-    task.status === 'todo' ? 'in_progress' :
-    task.status === 'in_progress' ? 'done' :
+    task.status === 'TODO' ? 'IN_PROGRESS' :
+    task.status === 'IN_PROGRESS' ? 'DONE' :
     null;
 
   const statusColor = {
@@ -19,6 +20,7 @@ export const TaskCard: React.FC<Props> = ({ task, onStatusChange }) => {
     in_progress: 'blue',
     done: 'green',
   }[task.status] || 'default';
+
 
   return (
     <Card
@@ -33,7 +35,7 @@ export const TaskCard: React.FC<Props> = ({ task, onStatusChange }) => {
         <Paragraph type="secondary" ellipsis={{ rows: 2 }}>
           {task.description || 'Без описания'}
         </Paragraph>
-        <Text type="secondary">Исполнитель: {task.assignee?.name || 'Не назначен'}</Text>
+        <Text type="secondary">Исполнитель: {task.assignee.name}</Text>
         <Tag color={statusColor}>{task.status}</Tag>
 
         {nextStatus && (
@@ -42,7 +44,7 @@ export const TaskCard: React.FC<Props> = ({ task, onStatusChange }) => {
             size="small"
             onClick={() => onStatusChange(task.id, nextStatus)}
           >
-            {nextStatus === 'in_progress' ? 'Начать' : 'Завершить'}
+            {nextStatus === 'IN_PROGRESS' ? 'Начать' : 'Завершить'}
           </Button>
         )}
       </Space>

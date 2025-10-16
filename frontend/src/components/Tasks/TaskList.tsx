@@ -18,13 +18,15 @@ export const TaskList: React.FC = () => {
     }
   };
 
+  console.log(tasks)
+
   if (isLoading) return <Spin size="large" style={{ display: 'block', margin: '3rem auto' }} />;
   if (error) return <Empty description="Ошибка загрузки задач" />;
 
   const columns = [
-    { title: 'К выполнению', status: 'todo', color: '#faad14' },
-    { title: 'В процессе', status: 'in_progress', color: '#1890ff' },
-    { title: 'Выполнено', status: 'done', color: '#52c41a' },
+    { title: 'К выполнению', status: 'TODO', color: '#faad14' },
+    { title: 'В процессе', status: 'IN_PROGRESS', color: '#1890ff' },
+    { title: 'Выполнено', status: 'DONE', color: '#52c41a' },
   ];
 
   return (

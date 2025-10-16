@@ -1,80 +1,117 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
-import { Text } from "../ui/Text";
-import { Link } from "../ui/Link";
-import { Form } from "../ui/Form";
+import React, { useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Card, Form, Input, Button, Typography, message } from 'antd';
+import { useRegisterMutation } from '../store/userApi';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../store/authSlice';
 
-const PageWrapper = styled.div`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.colors.background};
-`;
-
-const Container = styled.div`
-  max-width: 28rem;
-  width: 100%;
-  background: white;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const Title = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1.5rem;
-`;
-
-
+const { Title, Text } = Typography;
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [registerUser, { isLoading }] = useRegisterMutation();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (localStorage.getItem('token')) navigate('/');
+  }, [navigate]);
 
-    // Имитация успешной регистрации
-    localStorage.setItem("token", "example_token");
-    navigate("/");
+  const handleSubmit = async (values: {
+    name: string;
+    email: string;
+    password: string;
+    confirm: string;
+  }) => {
+    if (values.password !== values.confirm) {
+      message.error('Пароли не совпадают');
+      return;
+    }
+
+    try {
+      const data = await registerUser({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      }).unwrap();
+
+      dispatch(
+        setCredentials({
+          token: data.access_token,
+          user: data.user,
+        }),
+      );
+      message.success('Регистрация успешна!');
+      navigate('/');
+    } catch (err: any) {
+      message.error(err?.data?.message || 'Ошибка регистрации');
+    }
   };
 
   return (
-    <PageWrapper>
-      <Container>
-        <Title>Регистрация</Title>
-        <Form onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="name">Имя</Label>
-            <Input type="text" id="name" required />
-          </div>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input type="email" id="email" required />
-          </div>
-          <div>
-            <Label htmlFor="password">Пароль</Label>
-            <Input type="password" id="password" required />
-          </div>
-          <div>
-            <Label htmlFor="confirm">Подтверждение пароля</Label>
-            <Input type="password" id="confirm" required />
-          </div>
-          <Button type="submit">Создать аккаунт</Button>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: '#f5f5f5',
+        padding: '1rem',
+      }}
+    >
+      <Card style={{ maxWidth: 420, width: '100%' }}>
+        <Title level={3} style={{ textAlign: 'center' }}>
+          Регистрация
+        </Title>
+
+        <Form layout="vertical" onFinish={handleSubmit}>
+          <Form.Item label="Имя" name="name" rules={[{ required: true, message: 'Введите имя' }]}>
+            <Input placeholder="Ваше имя" />
+          </Form.Item>
+
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Введите Email' }]}
+          >
+            <Input placeholder="example@mail.com" />
+          </Form.Item>
+
+          <Form.Item
+            label="Пароль"
+            name="password"
+            rules={[{ required: true, message: 'Введите пароль' }]}
+          >
+            <Input.Password placeholder="Введите пароль" />
+          </Form.Item>
+
+          <Form.Item
+            label="Подтверждение пароля"
+            name="confirm"
+            dependencies={['password']}
+            rules={[
+              { required: true, message: 'Подтвердите пароль' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) return Promise.resolve();
+                  return Promise.reject(new Error('Пароли не совпадают'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Повторите пароль" />
+          </Form.Item>
+
+          <Button type="primary" htmlType="submit" loading={isLoading} block>
+            Создать аккаунт
+          </Button>
         </Form>
-        <Text>
-          Уже есть аккаунт? <Link href="/login">Войти</Link>
-        </Text>
-      </Container>
-    </PageWrapper>
+
+        <div style={{ textAlign: 'center', marginTop: 12 }}>
+          <Text>
+            Уже есть аккаунт? <Link to="/login">Войти</Link>
+          </Text>
+        </div>
+      </Card>
+    </div>
   );
 };

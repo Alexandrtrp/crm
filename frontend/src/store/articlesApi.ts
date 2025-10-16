@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { Article } from "../types/types";
 
 export const articlesApi = createApi({
   reducerPath: "articlesApi",
@@ -9,7 +10,7 @@ export const articlesApi = createApi({
       query: () => "",
       providesTags: ['Articles'],
     }),
-    addStock: builder.mutation< void, { articleId: string; amount: number; warehouseId: number } >({
+    addStock: builder.mutation<void, { articleId: string; amount: number; warehouseId: number } >({
       query: (body)=> ({
         url: '/add-stock',
         method: 'POST',

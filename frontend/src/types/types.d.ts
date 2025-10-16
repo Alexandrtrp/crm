@@ -35,3 +35,18 @@ type TTask = {
   assignee: { id: number; name: string };
   dueDate: string;
 };
+
+const Role = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+} as const;
+
+type Role = (typeof Role)[keyof typeof Role]; 
+
+export type TUser = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+};

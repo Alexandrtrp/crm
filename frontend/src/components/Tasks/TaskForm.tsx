@@ -2,15 +2,14 @@ import React from 'react';
 import { Form, Input, Select, Button, Card, message } from 'antd';
 import { useCreateTaskMutation } from '../../store/taskApi';
 import { useGetUsersQuery } from '../../store/userApi';
+import { useSelector } from 'react-redux';
 
 const { Option } = Select;
 
 type FormData = {
-      title: string;
+    title: string;
     description: string;
     assigneeId: string;
-    dueDate: string;
-    status?: string | undefined;
 }
 
 export const TaskForm: React.FC = () => {
@@ -22,7 +21,6 @@ export const TaskForm: React.FC = () => {
     try {
       await createTask({
         ...values,
-        dueDate: values.dueDate || '',
       }).unwrap();
 
       message.success('Задача успешно создана!');

@@ -1,11 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { TTask } from '../types/types';
 
 interface CreateTaskDto {
   title: string;
   description: string;
   assigneeId: string;
-  dueDate: string;
-  status?: string;
 }
 
 interface UpdateTaskStatusDto {
@@ -13,35 +12,48 @@ interface UpdateTaskStatusDto {
 }
 
 export const taskApi = createApi({
-  reducerPath: "taskApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "api/" }),
-  tagTypes: ["Tasks"],
-  endpoints: (buider) => ({
-    getTasks: buider.query<TTask[], void>({
-      query: () => "tasks",
-      providesTags: ["Tasks"],
+  reducerPath: 'taskApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'api/',
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as any).auth.token;
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
+  tagTypes: ['Tasks'],
+  endpoints: (builder) => ({
+    getTasks: builder.query<TTask[], void>({
+      query: () => 'tasks',
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((task) => ({ type: 'Tasks' as const, id: task.id })),
+              { type: 'Tasks', id: 'LIST' },
+            ]
+          : [{ type: 'Tasks', id: 'LIST' }],
     }),
-    createTask: buider.mutation<TTask, CreateTaskDto>({
+
+    createTask: builder.mutation<TTask, CreateTaskDto>({
       query: (body) => ({
-        url: "tasks",
-        method: "POST",
+        url: 'tasks',
+        method: 'POST',
         body,
       }),
-      invalidatesTags: ["Tasks"],
+      invalidatesTags: [{ type: 'Tasks', id: 'LIST' }],
     }),
-    updateTaskStatus: buider.mutation<TTask, { id: string; status: string }>({
+
+    updateTaskStatus: builder.mutation<TTask, { id: string; status: string }>({
       query: ({ id, status }) => ({
         url: `tasks/${id}/status`,
-        method: "PATCH",
+        method: 'PATCH',
         body: { status },
       }),
-      invalidatesTags: ["Tasks"],
+      invalidatesTags: (result, error, { id }) => [{ type: 'Tasks', id }],
     }),
   }),
 });
 
-export const {
-  useGetTasksQuery,
-  useCreateTaskMutation,
-  useUpdateTaskStatusMutation,
-} = taskApi;
+export const { useGetTasksQuery, useCreateTaskMutation, useUpdateTaskStatusMutation } = taskApi;

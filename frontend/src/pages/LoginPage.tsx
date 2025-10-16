@@ -1,64 +1,81 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
-import { Text } from "../ui/Text";
-import { Link } from "../ui/Link";
-import { Title } from "../ui/Title";
-import { Form } from "../ui/Form";
+import React, { useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Card, Form, Input, Button, Typography, message } from 'antd';
+import { useLoginMutation } from '../store/userApi';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../store/authSlice';
 
-const PageWrapper = styled.div`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.colors.background};
-`;
-
-const Container = styled.div`
-  max-width: 28rem; /* max-w-md */
-  width: 100%;
-  background: white;
-  padding: 2rem; /* p-8 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 0.5rem; /* rounded-lg */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-`;
+const { Title, Text } = Typography;
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [login, { isLoading }] = useLoginMutation();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (localStorage.getItem('token')) navigate('/');
+  }, [navigate]);
 
-    // Имитация успешного входа (сюда можно добавить логику отправки на сервер)
-    localStorage.setItem("token", "example_token");
-    navigate("/");
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    try {
+      const data = await login(values).unwrap();
+      dispatch(
+        setCredentials({
+          token: data.access_token,
+          user: data.user,
+        }),
+      );
+      message.success('Успешный вход!');
+      navigate('/');
+    } catch (err: any) {
+      message.error(err?.data?.message || 'Ошибка входа');
+    }
   };
 
   return (
-    <PageWrapper>
-      <Container>
-        <Title>Вход в CRM</Title>
-        <Form onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input type="email" id="email" required />
-          </div>
-          <div>
-            <Label htmlFor="password">Пароль</Label>
-            <Input type="password" id="password" required />
-          </div>
-          <Button type="submit">Войти</Button>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: '#f5f5f5',
+        padding: '1rem',
+      }}
+    >
+      <Card style={{ maxWidth: 420, width: '100%' }}>
+        <Title level={3} style={{ textAlign: 'center' }}>
+          Вход в CRM
+        </Title>
+
+        <Form layout="vertical" onFinish={handleSubmit}>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Введите Email' }]}
+          >
+            <Input placeholder="example@mail.com" />
+          </Form.Item>
+
+          <Form.Item
+            label="Пароль"
+            name="password"
+            rules={[{ required: true, message: 'Введите пароль' }]}
+          >
+            <Input.Password placeholder="Введите пароль" />
+          </Form.Item>
+
+          <Button type="primary" htmlType="submit" loading={isLoading} block>
+            Войти
+          </Button>
         </Form>
-        <Text>
-          Нет аккаунта? <Link href="/register">Регистрация</Link>
-        </Text>
-      </Container>
-    </PageWrapper>
+
+        <div style={{ textAlign: 'center', marginTop: 12 }}>
+          <Text>
+            Нет аккаунта? <Link to="/register">Регистрация</Link>
+          </Text>
+        </div>
+      </Card>
+    </div>
   );
 };

@@ -1,13 +1,18 @@
-import { Navigate, Outlet } from "react-router-dom";
-
-// Функция проверки авторизации (можно заменить на свою логику)
-const isAuthenticated = () => {
-  return true
-  // localStorage.getItem("token") !== null;  // пример через localStorage
-};
+import { useSelector } from 'react-redux';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import type { RootState } from '../store/store';
 
 const PrivateRoute = () => {
-  return isAuthenticated() ? <Outlet /> : <Navigate to="/login" replace />;
+  const location = useLocation();
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  if (token === undefined) return ;
+
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default PrivateRoute;
