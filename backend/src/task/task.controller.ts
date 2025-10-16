@@ -6,19 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 
 @Controller('tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Post()
-  create(@Body() dto: CreateTaskDto) {
-    return this.taskService.create(dto);
-  }
+@Post()
+@UseGuards(JwtAuthGuard)
+create(@Body() dto: CreateTaskDto, @Req() req) {
+  console.log(req.user); 
+  const creatorId = req.user.id;
+  return this.taskService.create(dto, creatorId);
+}
 
   @Get()
   findAll() {
@@ -27,7 +33,7 @@ export class TaskController {
 
   @Patch(':id/status')
   updateStatus(@Param('id') id: string, @Body() dto: UpdateTaskStatusDto) {
-    return this.taskService.update(+id, { status: dto.status });
+    return this.taskService.updateStatus(id, dto.status);
   }
 
   // @Delete(':id')

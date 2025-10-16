@@ -1,7 +1,14 @@
+import { IsOptional, IsString, IsUUID } from 'class-validator';
+
 export class CreateTaskDto {
+  @IsString()
   title: string;
+
+  @IsOptional()
+  @IsString()
   description: string;
-  status?: string; 
+
+  @IsOptional()
+  @IsUUID()
   assigneeId: string;
-  dueDate: string; 
 }
