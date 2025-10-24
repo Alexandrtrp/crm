@@ -12,6 +12,8 @@ export const ArticleMain: React.FC = () => {
   const navigate = useNavigate();
   const { data: articles = [], isError, isLoading } = useGetArticlesQuery();
 
+  const defaulArticle = articles[0]
+
   const selectedArticle = articles.find((a) => a.id === articleId) || null;
 
   if (isLoading) return <div>Загрузка...</div>;
@@ -31,14 +33,14 @@ export const ArticleMain: React.FC = () => {
       >
         <ArticleList
           articles={articles}
-          selectedId={selectedArticle?.id}
+          selectedId={selectedArticle ? selectedArticle?.id : defaulArticle.id}
           onSelect={(article) => navigate(`/warehouse/${article.id}`)}
         />
       </Sider>
 
       <Layout style={{ flex: 1 }}>
         <Content style={{ padding: '1rem', margin: '1rem' }}>
-          {selectedArticle && <ArticleCard article={selectedArticle} />}
+           <ArticleCard article={selectedArticle ? selectedArticle : defaulArticle} />
         </Content>
       </Layout>
     </Layout>

@@ -1,66 +1,115 @@
 import React from 'react';
-import { Form, Input, Select, Button, Card, message } from 'antd';
+import { Form, Select, Button, Card, message, InputNumber, Space } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useCreateTaskMutation } from '../../store/taskApi';
 import { useGetUsersQuery } from '../../store/userApi';
-import { useSelector } from 'react-redux';
+import { useGetArticlesQuery } from '../../store/articlesApi';
 
 const { Option } = Select;
 
 type FormData = {
-    title: string;
-    description: string;
-    assigneeId: string;
-}
+  tasks: { articleId: string; quantity: number }[];
+  assigneeId: string;
+};
 
 export const TaskForm: React.FC = () => {
   const [form] = Form.useForm();
   const [createTask, { isLoading }] = useCreateTaskMutation();
   const { data: users = [], isLoading: usersLoading } = useGetUsersQuery();
+  const { data: articles = [], isLoading: articlesLoading } = useGetArticlesQuery();
 
-  const handleSubmit = async (values: FormData) => {
-    try {
-      await createTask({
-        ...values,
-      }).unwrap();
+const handleSubmit = async (values: FormData) => {
+  try {
+    await createTask({
+      assigneeId: values.assigneeId,
+      items: values.tasks,
+    }).unwrap();
 
-      message.success('Задача успешно создана!');
-      form.resetFields();
-    } catch (err) {
-      message.error('Ошибка при создании задачи');
-    }
-  };
+    message.success('Задача успешно создана!');
+    form.resetFields();
+  } catch {
+    message.error('Ошибка при создании задачи');
+  }
+};
+
 
   return (
     <Card
-      title="Создать новую задачу"
       style={{
-        maxWidth: 500,
+        maxWidth: 600,
         margin: '1rem auto',
         borderRadius: 10,
         boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
       }}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Заголовок задачи"
-          name="title"
-          rules={[{ required: true, message: 'Введите заголовок задачи' }]}
+      <Form form={form} layout="vertical" onFinish={handleSubmit} autoComplete="off">
+        <Form.List
+          name="tasks"
+          rules={[
+            {
+              validator: async (_, tasks) =>
+                !tasks || tasks.length < 1
+                  ? Promise.reject(new Error('Добавьте хотя бы один артикул'))
+                  : Promise.resolve(),
+            },
+          ]}
         >
-          <Input placeholder="Например: Проверить склад" />
-        </Form.Item>
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...rest }) => (
+                <Space
+                  key={key}
+                  align="baseline"
+                  style={{ display: 'flex', marginBottom: 8 }}
+                >
+                  <Form.Item
+                    {...rest}
+                    name={[name, 'articleId']}
+                    label="Артикул"
+                    rules={[{ required: true, message: 'Выберите артикул' }]}
+                  >
+                    <Select
+                      loading={articlesLoading}
+                      placeholder="Выберите артикул"
+                      style={{ width: 250 }}
+                    >
+                      {articles.map((article: TArticle) => (
+                        <Option key={article.id} value={article.id}>
+                          {article.articleName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
 
-        <Form.Item
-          label="Описание"
-          name="description"
-          rules={[{ required: true, message: 'Введите описание задачи' }]}
-        >
-          <Input.TextArea placeholder="Краткое описание задачи" rows={3} />
-        </Form.Item>
+                  <Form.Item
+                    {...rest}
+                    name={[name, 'quantity']}
+                    label="Количество"
+                    rules={[{ required: true, message: 'Введите количество' }]}
+                  >
+                    <InputNumber min={1} placeholder="Шт." />
+                  </Form.Item>
+
+                  <MinusCircleOutlined
+                    onClick={() => remove(name)}
+                    style={{ color: 'red', marginTop: 30 }}
+                  />
+                </Space>
+              ))}
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Добавить артикул
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
 
         <Form.Item
           label="Исполнитель"
@@ -81,13 +130,8 @@ export const TaskForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            block
-            loading={isLoading}
-          >
-            Создать задачу
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
+            Создать
           </Button>
         </Form.Item>
       </Form>

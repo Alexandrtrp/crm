@@ -1,4 +1,11 @@
-type Article = {
+const Role = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+} as const;
+
+type Role = (typeof Role)[keyof typeof Role];
+
+type TArticle = {
   id: string;
   articleName: string;
   stocks: {
@@ -27,23 +34,23 @@ type TWarehouse = {
   location?: string;
 };
 
-type TTask = {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  assignee: { id: number; name: string };
-  dueDate: string;
+type TaskItemDto = {
+  quantity: number;
+  article: {
+    id: string,
+    name: string
+  }
 };
 
-const Role = {
-  USER: 'USER',
-  ADMIN: 'ADMIN',
-} as const;
+type TTask = {
+  id: string;
+  status: string;
+  assignee: { id: number; name: string; role: Role };
+  dueDate: string;
+  items: TaskItemDto[];
+};
 
-type Role = (typeof Role)[keyof typeof Role]; 
-
-export type TUser = {
+type TUser = {
   id: string;
   name: string;
   email: string;

@@ -1,10 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { TTask } from '../types/types';
+
+interface TaskItemDto {
+  articleId: string;
+  quantity: number;
+}
 
 interface CreateTaskDto {
-  title: string;
-  description: string;
   assigneeId: string;
+  items: TaskItemDto[];
 }
 
 interface UpdateTaskStatusDto {

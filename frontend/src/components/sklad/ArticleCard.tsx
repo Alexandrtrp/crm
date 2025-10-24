@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import { Button, Card, Form, Input, Select, Typography, message } from 'antd';
 import { useAddStockMutation } from '../../store/articlesApi';
+import type { TArticle } from '../../types/types';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 type ArticleCardProps = {
-  article: Article;
+  article: TArticle;
 };
 
 type FormData = {

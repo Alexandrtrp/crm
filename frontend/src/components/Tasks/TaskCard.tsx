@@ -1,8 +1,7 @@
 import React from 'react';
-import { Card, Button, Tag, Space, Typography } from 'antd';
-import type { TTask } from '../../types/types';
+import { Card, Button, Space, Typography, Row, Col } from 'antd';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 type Props = {
   task: TTask;
@@ -11,39 +10,41 @@ type Props = {
 
 export const TaskCard: React.FC<Props> = ({ task, onStatusChange }) => {
   const nextStatus =
-    task.status === 'TODO' ? 'IN_PROGRESS' :
-    task.status === 'IN_PROGRESS' ? 'DONE' :
-    null;
+    task.status === 'TODO' ? 'IN_PROGRESS' : task.status === 'IN_PROGRESS' ? 'DONE' : null;
 
-  const statusColor = {
-    todo: 'gold',
-    in_progress: 'blue',
-    done: 'green',
-  }[task.status] || 'default';
-
+  const statusColor =
+    {
+      TODO: 'gold',
+      IN_PROGRESS: 'blue',
+      DONE: 'green',
+    }[task.status] || 'default';
 
   return (
     <Card
       size="small"
       style={{
         marginBottom: '1rem',
-        borderLeft: `4px solid var(--ant-color-${statusColor}, ${statusColor})`,
+        borderLeft: `4px solid ${statusColor}`,
       }}
     >
       <Space direction="vertical" style={{ width: '100%' }}>
-        <Text strong>{task.title}</Text>
-        <Paragraph type="secondary" ellipsis={{ rows: 2 }}>
-          {task.description || 'Без описания'}
-        </Paragraph>
+        <Row style={{ fontWeight: 'bold', marginBottom: 4 }}>
+          <Col span={16}>Артикул</Col>
+          <Col span={8} style={{ textAlign: 'center' }}>Количество</Col>
+        </Row>
+
+
+        {task.items.map((item) => (
+          <Row key={item.article.id} style={{ marginBottom: 2 }}>
+            <Col span={16}>{item.article.name}</Col>
+            <Col span={8} style={{ textAlign: 'center' }}>{item.quantity}</Col>
+          </Row>
+        ))}
+
         <Text type="secondary">Исполнитель: {task.assignee.name}</Text>
-        <Tag color={statusColor}>{task.status}</Tag>
 
         {nextStatus && (
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => onStatusChange(task.id, nextStatus)}
-          >
+          <Button type="primary" size="small" onClick={() => onStatusChange(task.id, nextStatus)}>
             {nextStatus === 'IN_PROGRESS' ? 'Начать' : 'Завершить'}
           </Button>
         )}

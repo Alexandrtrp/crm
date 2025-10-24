@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { List, Typography, Layout, Tag } from 'antd';
 import { FilterInput } from '../../FilterInput';
 import styles from './ArticleList.module.css';
+import type { Article } from '../../../types/types';
 
-const { Sider } = Layout;
 const { Text } = Typography;
 
 type Props = {
