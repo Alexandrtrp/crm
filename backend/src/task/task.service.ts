@@ -2,31 +2,39 @@ import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Task } from '@prisma/client';
-import { TaskStatus } from './dto/update-task-status.dto';
+import { Task, TaskStatus } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateTaskDto, creatorId: string): Promise<Task> {
+  async create(dto: CreateTaskDto, creatorId: string) {
     return this.prisma.task.create({
       data: {
-        title: dto.title,
-        description: dto.description,
-        status: 'TODO',
+        status: TaskStatus.TODO,
         assigneeId: dto.assigneeId,
         creatorId,
+        items: {
+          create: dto.items.map((item) => ({
+            articleId: item.articleId,
+            quantity: item.quantity,
+          })),
+        },
       },
-      include: { assignee: true },
+      include: {
+        assignee: true,
+        items: { include: { article: true } },
+      },
     });
   }
 
-  async findAll(): Promise<Task[]> {
+  async findAll() {
     return this.prisma.task.findMany({
       include: {
         assignee: true,
+        items: { include: { article: true } },
       },
+      orderBy: { createdAt: 'desc' },
     });
   }
 

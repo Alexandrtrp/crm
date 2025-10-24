@@ -12,14 +12,20 @@ export class UsersService {
 
   findAll() {
     return this.prisma.user.findMany({
-      include: { tasks: true },
+      include: {
+        createdTasks: true,
+        assignedTasks: true,
+      },
     });
   }
 
   findOne(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
-      include: { tasks: true },
+      include: {
+        createdTasks: true,
+        assignedTasks: true,
+      },
     });
   }
 

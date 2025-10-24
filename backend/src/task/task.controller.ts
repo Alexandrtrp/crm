@@ -21,7 +21,6 @@ export class TaskController {
 @Post()
 @UseGuards(JwtAuthGuard)
 create(@Body() dto: CreateTaskDto, @Req() req) {
-  console.log(req.user); 
   const creatorId = req.user.id;
   return this.taskService.create(dto, creatorId);
 }
