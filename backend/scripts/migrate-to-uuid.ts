@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Migrating Users...");
   const users = await prisma.user.findMany();
-  const userMap: Record<number, string> = {}; // старый Int -> новый UUID
+  const userMap: Record<number, string> = {}; 
   for (const u of users) {
     const newId = uuidv4();
     userMap[u.id] = newId;
