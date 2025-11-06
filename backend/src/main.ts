@@ -7,8 +7,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors({
     origin: 'http://localhost:5173', // URL фронтенда на Vite
-    credentials: true, // если используешь куки или авторизацию
-  }); // <-- разрешаем CORS
+    credentials: true, 
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

@@ -8,7 +8,7 @@ import { TaskModule } from './task/task.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { UsersService } from './users/users.service';
+import { WarehouseModule } from './warehouse/warehouse.module';
 
 @Module({
   imports: [
@@ -18,6 +18,7 @@ import { UsersService } from './users/users.service';
     TaskModule,
     UsersModule,
     AuthModule,
+    WarehouseModule,
     ConfigModule.forRoot({
       isGlobal: true, 
     }),
