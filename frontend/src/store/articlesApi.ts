@@ -1,12 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { Article } from "../types/types";
 
 export const articlesApi = createApi({
   reducerPath: "articlesApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api/articles" }),
   tagTypes: ['Articles'],
   endpoints: (builder) => ({
-    getArticles: builder.query<Article[], void>({
+    getArticles: builder.query<TArticle[], void>({
       query: () => "",
       providesTags: ['Articles'],
     }),

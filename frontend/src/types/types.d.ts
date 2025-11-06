@@ -13,6 +13,11 @@ type TArticle = {
     warehouse: number;
     count: number;
   }[];
+  components: {
+    componentId: string;
+    componentName: string;
+    quantityPerArticle: number;
+  }[];
 };
 
 type TComponents = {
@@ -37,9 +42,9 @@ type TWarehouse = {
 type TaskItemDto = {
   quantity: number;
   article: {
-    id: string,
-    name: string
-  }
+    id: string;
+    name: string;
+  };
 };
 
 type TTask = {

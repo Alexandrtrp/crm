@@ -1,13 +1,26 @@
 import React, { useCallback } from 'react';
-import { Button, Card, Form, Input, Select, Typography, message } from 'antd';
+import {
+  Button,
+  Card,
+  Divider,
+  Form,
+  Input,
+  List,
+  Select,
+  Space,
+  Tag,
+  Typography,
+  message,
+} from 'antd';
 import { useAddStockMutation } from '../../store/articlesApi';
-import type { TArticle } from '../../types/types';
+import Title from 'antd/es/typography/Title';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 type ArticleCardProps = {
   article: TArticle;
+  warehouses: TWarehouse[];
 };
 
 type FormData = {
@@ -15,14 +28,9 @@ type FormData = {
   amount: number;
 };
 
-export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+export const ArticleCard: React.FC<ArticleCardProps> = ({ article, warehouses }) => {
   const [form] = Form.useForm<FormData>();
   const [addStock, { isLoading }] = useAddStockMutation();
-
-  const warehouses = article.stocks.map((el) => ({
-    name: el.warehouse,
-    id: el.warehouseId,
-  }));
 
   const onFinish = useCallback(
     async (values: FormData) => {
@@ -43,56 +51,124 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   );
 
   return (
-    <Card>
-      <h2>{article.articleName}</h2>
+    <Card
+      style={{
+        borderRadius: 12,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        padding: '1.5rem',
+        marginBottom: '1.5rem',
+        maxHeight: '85vh',
+        overflowY: 'auto',
+      }}
+    >
+      <Title level={4}>{article.articleName}</Title>
 
-      {article.stocks.map((stock) => (
-        <p key={stock.warehouseId}>
-          На складе {stock.warehouse}: {stock.count}
-        </p>
-      ))}
+      {article.components?.length > 0 && (
+        <Card
+          title="Состав артикула"
+          style={{
+            borderRadius: 12,
+            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+            marginBottom: '1rem',
+          }}
+          styles={{
+            body: { padding: '1rem' },
+          }}
+        >
+          <List
+            dataSource={article.components}
+            renderItem={(component) => (
+              <List.Item>
+                <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                  <Text style={{ flex: 1, minWidth: 0, wordBreak: 'break-word' }}>
+                    {component.componentName}
+                  </Text>
+                  <Text type="secondary" style={{ marginLeft: '0.5rem' }}>
+                    × {component.quantityPerArticle}
+                  </Text>
+                </div>
+              </List.Item>
+            )}
+          />
+        </Card>
+      )}
 
-      <Text strong>Добавить:</Text>
+      {article.stocks?.length > 0 && (
+        <Card
+          title="Остатки на складах"
+          style={{
+            borderRadius: 12,
+            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+            marginBottom: '1rem',
+          }}
+          styles={{
+            body: { padding: '1rem' },
+          }}
+        >
+          <List
+            dataSource={article.stocks}
+            renderItem={(stock) => (
+              <List.Item>
+                <Space>
+                  <Text strong>{stock.warehouse}</Text>
+                  <Divider type="vertical" />
+                  <Text>{stock.count} шт.</Text>
+                </Space>
+              </List.Item>
+            )}
+          />
+        </Card>
+      )}
 
-      <Form
-        form={form}
-        onFinish={onFinish}
-        layout="vertical"
-        style={{ marginTop: '1rem' }}
+      <Card
+        style={{
+          borderRadius: 12,
+          boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+        }}
+        styles={{
+          body: { padding: '1rem' },
+        }}
       >
-        <Form.Item
-          name="warehouseId"
-          label="Склад"
-          rules={[{ required: true, message: 'Выберите склад' }]}
-        >
-          <Select placeholder="Выберите склад">
-            {warehouses.map((wh) => (
-              <Option key={wh.id} value={wh.id}>
-                {wh.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        <Text strong style={{ display: 'block', marginBottom: '0.5rem' }}>
+          Добавить:
+        </Text>
 
-        <Form.Item
-          name="amount"
-          label="Количество"
-          rules={[
-            { required: true, type: 'number', min: 1, transform: Number, message: 'Введите положительное число' },
-          ]}
-        >
-          <Input type="number" placeholder="Введите количество" />
-        </Form.Item>
+        <Form form={form} onFinish={onFinish} layout="vertical">
+          <Form.Item
+            name="warehouseId"
+            label="Склад"
+            rules={[{ required: true, message: 'Выберите склад' }]}
+          >
+            <Select placeholder="Выберите склад">
+              {warehouses.map((wh) => (
+                <Option key={wh.id} value={wh.id}>
+                  {wh.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={isLoading}
-          disabled={isLoading}
-        >
-          Сохранить
-        </Button>
-      </Form>
+          <Form.Item
+            name="amount"
+            label="Количество"
+            rules={[
+              {
+                required: true,
+                type: 'number',
+                min: 1,
+                transform: Number,
+                message: 'Введите положительное число',
+              },
+            ]}
+          >
+            <Input type="number" placeholder="Введите количество" />
+          </Form.Item>
+
+          <Button type="primary" htmlType="submit" loading={isLoading} disabled={isLoading}>
+            Сохранить
+          </Button>
+        </Form>
+      </Card>
     </Card>
   );
 };
