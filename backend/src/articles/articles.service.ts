@@ -8,7 +8,7 @@ import { AddStockDto } from './dto/add-stock.dto';
 @Injectable()
 export class ArticlesService {
   constructor(private readonly prisma: PrismaService) {}
-  
+
   create(createArticleDto: CreateArticleDto) {
     return 'This action adds a new article';
   }
@@ -21,6 +21,11 @@ export class ArticlesService {
             warehouse: true,
           },
         },
+        components: {
+          include: {
+            component: true, 
+          },
+        },
       },
     });
     return articles.map((article) => ({
@@ -30,6 +35,11 @@ export class ArticlesService {
         warehouseId: stock.warehouse.id,
         warehouse: stock.warehouse.name,
         count: stock.count,
+      })),
+      components: article.components.map((ac) => ({
+        componentId: ac.component.id,
+        componentName: ac.component.name,
+        quantityPerArticle: ac.quantity,
       })),
     }));
   }

@@ -6,10 +6,6 @@ export class WarehouseService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.warehouse.findMany({
-      where: {
-        location: 'Russia',
-      },
-    });
+    return this.prisma.warehouse.findMany();
   }
 }
