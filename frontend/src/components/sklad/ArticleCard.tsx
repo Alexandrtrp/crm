@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Button,
   Card,
   Divider,
+  Drawer,
   Form,
   Input,
   List,
@@ -14,6 +15,7 @@ import {
 } from 'antd';
 import { useAddStockMutation } from '../../store/articlesApi';
 import Title from 'antd/es/typography/Title';
+import { ArticleForm } from './ArticleForm';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -30,6 +32,8 @@ type FormData = {
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ article, warehouses }) => {
   const [form] = Form.useForm<FormData>();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
   const [addStock, { isLoading }] = useAddStockMutation();
 
   const onFinish = useCallback(
@@ -61,7 +65,17 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, warehouses })
         overflowY: 'auto',
       }}
     >
-      <Title level={4}>{article.articleName}</Title>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Title level={4}>{article.articleName}</Title>
+        <Button
+          type="primary"
+          onClick={() => {
+            setDrawerVisible(true);
+          }}
+        >
+          Редактировать
+        </Button>
+      </div>
 
       {article.components?.length > 0 && (
         <Card
@@ -169,6 +183,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, warehouses })
           </Button>
         </Form>
       </Card>
+      <Drawer
+        title="Редактировать артикул"
+        placement="right"
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+        width={600}
+      >
+        <ArticleForm name={article.articleName} baseComponents={article.components} stocks={article.stocks}/>
+      </Drawer>
     </Card>
   );
 };

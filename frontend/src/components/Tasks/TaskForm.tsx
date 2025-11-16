@@ -18,20 +18,19 @@ export const TaskForm: React.FC = () => {
   const { data: users = [], isLoading: usersLoading } = useGetUsersQuery();
   const { data: articles = [], isLoading: articlesLoading } = useGetArticlesQuery();
 
-const handleSubmit = async (values: FormData) => {
-  try {
-    await createTask({
-      assigneeId: values.assigneeId,
-      items: values.tasks,
-    }).unwrap();
+  const handleSubmit = async (values: FormData) => {
+    try {
+      await createTask({
+        assigneeId: values.assigneeId,
+        items: values.tasks,
+      }).unwrap();
 
-    message.success('Задача успешно создана!');
-    form.resetFields();
-  } catch {
-    message.error('Ошибка при создании задачи');
-  }
-};
-
+      message.success('Задача успешно создана!');
+      form.resetFields();
+    } catch {
+      message.error('Ошибка при создании задачи');
+    }
+  };
 
   return (
     <Card
@@ -57,11 +56,7 @@ const handleSubmit = async (values: FormData) => {
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...rest }) => (
-                <Space
-                  key={key}
-                  align="baseline"
-                  style={{ display: 'flex', marginBottom: 8 }}
-                >
+                <Space key={key} align="baseline" style={{ display: 'flex', marginBottom: 8 }}>
                   <Form.Item
                     {...rest}
                     name={[name, 'articleId']}
@@ -98,12 +93,7 @@ const handleSubmit = async (values: FormData) => {
               ))}
 
               <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                   Добавить артикул
                 </Button>
               </Form.Item>
@@ -116,11 +106,7 @@ const handleSubmit = async (values: FormData) => {
           name="assigneeId"
           rules={[{ required: true, message: 'Выберите исполнителя' }]}
         >
-          <Select
-            loading={usersLoading}
-            placeholder="Выберите исполнителя"
-            allowClear
-          >
+          <Select loading={usersLoading} placeholder="Выберите исполнителя" allowClear>
             {users.map((user: any) => (
               <Option key={user.id} value={user.id}>
                 {user.name}

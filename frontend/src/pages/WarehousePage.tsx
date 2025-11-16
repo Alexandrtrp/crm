@@ -1,24 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
 import { ComponentsTable } from '../components/Sklad/ComponentsTable';
 import { ArticleMain } from '../components/Sklad/ArticleMain';
+import { Splitter } from 'antd';
 
-const Wrapper = styled.div`
-  display: flex;
-  height: 90vh;
-  overflow: hidden;
-  & > * {
-    min-width: 0;
-  }
-`;
 
 export const WarehousePage: React.FC = () => {
   return (
-    <Wrapper>
+    <Splitter style={{ height: '90vh' }}>
+      <Splitter.Panel defaultSize="45%" min="35%" max="60%" style={{overflow: 'hidden'}}>
         <ArticleMain />
-      <div style={{ flex: 2, minWidth: 0, position: "relative", zIndex: 0 }}>
+      </Splitter.Panel>
+
+      <Splitter.Panel>
         <ComponentsTable />
-      </div>
-    </Wrapper>
+      </Splitter.Panel>
+    </Splitter>
   );
 };

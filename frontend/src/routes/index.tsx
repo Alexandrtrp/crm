@@ -1,33 +1,35 @@
-import { createBrowserRouter } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute";
+import { createBrowserRouter } from 'react-router-dom';
+import PrivateRoute from './PrivateRoute';
 
-import { LoginPage } from "../pages/LoginPage";
-import { RegisterPage } from "../pages/RegisterPage";
-import { HomePage } from "../pages/HomePage";
-import { WarehousePage } from "../pages/WarehousePage";
-import { DashboardLayout } from "../layouts/DashboardLayout";
-import { TaskPage } from "../pages/TasksPage";
+import { LoginPage } from '../pages/LoginPage';
+import { RegisterPage } from '../pages/RegisterPage';
+import { HomePage } from '../pages/HomePage';
+import { WarehousePage } from '../pages/WarehousePage';
+import { DashboardLayout } from '../layouts/DashboardLayout';
+import { TaskPage } from '../pages/TasksPage';
+import { ProfilePage } from '../pages/ProfilePage';
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
+    path: '/login',
     element: <LoginPage />,
   },
   {
-    path: "/register",
+    path: '/register',
     element: <RegisterPage />,
   },
   {
-    path: "/",
-    element: <PrivateRoute />, 
+    path: '/',
+    element: <PrivateRoute />,
     children: [
       {
         element: <DashboardLayout />,
         children: [
           { index: true, element: <HomePage /> },
-          { path: "warehouse", element: <WarehousePage /> },
-          { path: "warehouse/:articleId", element: <WarehousePage /> },
-          { path: "tasks", element: <TaskPage /> },
+          { path: 'warehouse', element: <WarehousePage /> },
+          { path: 'warehouse/:articleId', element: <WarehousePage /> },
+          { path: 'tasks', element: <TaskPage /> },
+          { path: 'profile', element: <ProfilePage /> },
         ],
       },
     ],

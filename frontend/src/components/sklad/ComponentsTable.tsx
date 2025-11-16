@@ -1,68 +1,50 @@
-import { useEffect, useState, useMemo } from "react";
-import { Table, Typography, Spin, Alert } from "antd";
-import { useGetComponentsQuery } from "../../store/componentsApi";
+import { useEffect, useState, useMemo } from 'react';
+import { Table, Typography, Spin, Alert } from 'antd';
+import { useGetComponentsQuery } from '../../store/componentsApi';
+import { useGetWarehousesQuery } from '../../store/warehouseApi';
+import { ErrorMessage } from '../ui/ErrorMessage';
+import { Loader } from '../ui/Loader';
 
 const { Title } = Typography;
 
 export const ComponentsTable = () => {
-  const [components, setComponents] = useState<TComponents[]>([]);
-  const [warehouses, setWarehouses] = useState<string[]>([]);
-
-  const { data, isError, isLoading } = useGetComponentsQuery();
-
-  useEffect(() => {
-    if (data) {
-      setComponents(data);
-
-      const uniqueWarehouses: string[] = Array.from(
-        new Set(
-          data.flatMap((component) =>
-            component.componentsInStock.map((el) => el.warehouse.name)
-          )
-        )
-      );
-
-      setWarehouses(uniqueWarehouses);
-    }
-  }, [data]);
+  const { data: components, isError, isLoading } = useGetComponentsQuery();
+  const { data: warehouses = [] } = useGetWarehousesQuery();
 
   const columns = useMemo(() => {
     const stockColumns = warehouses.map((wh) => ({
-      title: wh,
-      dataIndex: wh,
-      key: wh,
-      align: "center" as const,
+      title: wh.name,
+      dataIndex: wh.id,
+      key: wh.id,
+      align: 'center' as const,
     }));
 
     return [
       {
-        title: "Комплектующие",
-        dataIndex: "name",
-        key: "name",
-        align: "left" as const,
+        title: 'Комплектующие',
+        dataIndex: 'name',
+        key: 'name',
+        align: 'left' as const,
       },
       ...stockColumns,
       {
-        title: "Всего",
-        dataIndex: "total",
-        key: "total",
-        align: "center" as const,
+        title: 'Всего',
+        dataIndex: 'total',
+        key: 'total',
+        align: 'center' as const,
         render: (value: number) => <b>{value}</b>,
       },
     ];
   }, [warehouses]);
 
   const tableData = useMemo(() => {
-    return components.map((component) => {
+    return components?.map((component) => {
       const stockMap: Record<string, number> = {};
       component.componentsInStock.forEach((el) => {
-        stockMap[el.warehouse.name] = el.count;
+        stockMap[el.warehouse.id] = el.count;
       });
 
-      const total = warehouses.reduce(
-        (sum, wh) => sum + (stockMap[wh] || 0),
-        0
-      );
+      const total = warehouses.reduce((sum, wh) => sum + (stockMap[wh.id] || 0), 0);
 
       return {
         key: component.id,
@@ -73,12 +55,14 @@ export const ComponentsTable = () => {
     });
   }, [components, warehouses]);
 
-  
-  if (isLoading) return <Spin tip="Загрузка..." />;
-  if (isError) return <Alert type="error" message="Ошибка загрузки данных" />;
+  if (isLoading)
+    return <Loader/>
 
+  if (isError)
+    return <ErrorMessage/>
+    
   return (
-    <div style={{ padding: 24, height: "90vh" }}>
+    <div style={{ padding: 24, height: '90vh' }}>
       <Title level={3} style={{ marginBottom: 16 }}>
         Складской учёт комплектующих
       </Title>
@@ -86,7 +70,7 @@ export const ComponentsTable = () => {
         columns={columns}
         dataSource={tableData}
         pagination={false}
-        scroll={{ y: "75vh" }}
+        scroll={{ y: '75vh' }}
         bordered
       />
     </div>
