@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { List, Typography, Layout, Tag, Button, Drawer } from 'antd';
-import { FilterInput } from '../../FilterInput';
+import { FilterInput } from '../../ui/FilterInput';
 import styles from './ArticleList.module.css';
 import { ArticleForm } from '../ArticleForm';
 

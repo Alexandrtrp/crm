@@ -8,6 +8,8 @@ import { WarehousePage } from '../pages/WarehousePage';
 import { DashboardLayout } from '../layouts/DashboardLayout';
 import { TaskPage } from '../pages/TasksPage';
 import { ProfilePage } from '../pages/ProfilePage';
+import { Users } from '../components/Profile/Users';
+import { CreateUser } from '../components/Profile/CreateUser';
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +31,14 @@ export const router = createBrowserRouter([
           { path: 'warehouse', element: <WarehousePage /> },
           { path: 'warehouse/:articleId', element: <WarehousePage /> },
           { path: 'tasks', element: <TaskPage /> },
-          { path: 'profile', element: <ProfilePage /> },
+          {
+            path: 'profile',
+            element: <ProfilePage />,
+            children: [
+              { path: 'users', element: <Users /> },
+              { path: 'create-user', element: <CreateUser /> },
+            ],
+          },
         ],
       },
     ],

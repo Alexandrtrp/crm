@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Layout, Menu, Typography } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '../store/authSlice';
+import { logout } from '../../store/authSlice';
 
 const { Header } = Layout;
 const { Text } = Typography;

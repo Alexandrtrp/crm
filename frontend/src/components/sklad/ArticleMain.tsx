@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Layout, Spin } from 'antd';
+import { Alert, Layout } from 'antd';
 import { useGetArticlesQuery } from '../../store/articlesApi';
 import { ArticleList } from './ArticleList/ArticleList';
 import { ArticleCard } from './ArticleCard';
@@ -45,14 +45,12 @@ export const ArticleMain: React.FC = () => {
         />
       </Sider>
 
-      <Layout style={{ flex: 1 }}>
         <Content style={{ padding: '1rem', margin: '1rem' }}>
           <ArticleCard
             article={selectedArticle ? selectedArticle : defaulArticle}
             warehouses={warehouses}
           />
         </Content>
-      </Layout>
     </Layout>
   );
 };
