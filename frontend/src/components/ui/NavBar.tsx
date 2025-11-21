@@ -14,11 +14,12 @@ export const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/login");
+    navigate('/login');
   };
 
   const menuItems = [
     { key: '/', label: 'Главная' },
+    { key: '/input', label: 'Ввод поступлений' },
     { key: '/warehouse', label: 'Складской учёт' },
     { key: '/tasks', label: 'Задачи' },
     { key: '/profile', label: 'Профиль' },
@@ -49,10 +50,9 @@ export const Navbar: React.FC = () => {
           key: item.key,
           label: item.label,
         }))}
-        style={{ backgroundColor: '#1890ff', borderBottom: 'none' }}
+        style={{ backgroundColor: '#1890ff', borderBottom: 'none', minWidth: '600px' }}
       />
       <Button onClick={handleLogout}>Выйти</Button>
-
     </Header>
   );
 };

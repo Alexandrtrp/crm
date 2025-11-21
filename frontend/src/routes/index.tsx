@@ -10,6 +10,10 @@ import { TaskPage } from '../pages/TasksPage';
 import { ProfilePage } from '../pages/ProfilePage';
 import { Users } from '../components/Profile/Users';
 import { CreateUser } from '../components/Profile/CreateUser';
+import { InputPage } from '../pages/InputPage';
+import { MovementGoodsForm } from '../components/InputForms/MovementGoodsForm';
+import { InputPurchaseForm } from '../components/InputForms/InputPurchaseForm';
+import { InputProductionForm } from '../components/InputForms/InputProductionForm';
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +42,15 @@ export const router = createBrowserRouter([
               { path: 'users', element: <Users /> },
               { path: 'create-user', element: <CreateUser /> },
             ],
+          },
+          {
+            path: '/input',
+            element: <InputPage />,
+            // children: [
+            //   { path: 'production', element: <InputProductionForm /> },
+            //   { path: 'purchase', element: <InputPurchaseForm /> },
+            //   { path: 'purchase', element: <MovementGoodsForm /> },
+            // ],
           },
         ],
       },

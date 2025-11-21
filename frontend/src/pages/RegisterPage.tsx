@@ -32,6 +32,7 @@ export const RegisterPage: React.FC = () => {
         name: values.name,
         email: values.email,
         password: values.password,
+        role: 'ADMIN'
       }).unwrap();
 
       dispatch(

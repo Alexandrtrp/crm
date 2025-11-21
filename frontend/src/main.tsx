@@ -6,13 +6,18 @@ import { router } from './routes/index.tsx';
 import { GlobalStyles } from './styles/GlobalStyles.ts';
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
+import { ConfigProvider } from 'antd';
+import locale from 'antd/locale/ru_Ru';
+
 import 'antd/dist/reset.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}>
+    <ConfigProvider locale={locale}>
+      <Provider store={store}>
         <GlobalStyles />
         <RouterProvider router={router} />
-    </Provider>
+      </Provider>
+    </ConfigProvider>
   </StrictMode>,
 );

@@ -1,6 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { TUser } from '../types/types';
-
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -21,7 +19,7 @@ export const userApi = createApi({
         body,
       }),
     }),
-    register: builder.mutation<{ access_token: string; user: TUser }, { name: string; email: string; password: string }>({
+    register: builder.mutation<{ access_token: string; user: TUser }, Partial<TUser>>({
       query: (body) => ({
         url: '/auth/register',
         method: 'POST',

@@ -77,7 +77,7 @@ export const ArticleForm: React.FC<ArticleForm> = ({ name, baseComponents, stock
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit} autoComplete="off">
         <Form.Item name="articleName">
-          <Input type='text' placeholder='Введите название артикула'/>
+          <Input type="text" placeholder="Введите название артикула" />
         </Form.Item>
 
         <Form.List
