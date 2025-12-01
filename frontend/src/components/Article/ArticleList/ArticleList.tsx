@@ -24,19 +24,13 @@ export const ArticleList: React.FC<Props> = ({ articles, selectedId, onSelect })
     <div
       style={{
         background: '#fafafa',
-        padding: '1rem',
-        borderRight: '1px solid #f0f0f0',
-        height: '100vh',
+        height: '80vh',
         display: 'flex',
         flexDirection: 'column',
         overflowX: 'hidden',
-        width: '200px',
         gap: '5px',
       }}
     >
-      <Text strong style={{ fontSize: 16, marginBottom: 8, display: 'block' }}>
-        Артикулы
-      </Text>
 
       <Button
         type="primary"

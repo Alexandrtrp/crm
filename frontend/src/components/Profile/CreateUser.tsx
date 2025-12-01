@@ -51,10 +51,8 @@ export const CreateUser = () => {
   return (
     <div
       style={{
-        // minHeight: '90vh',
         display: 'flex',
         justifyContent: 'center',
-        // alignItems: 'center',
         background: '#f5f5f5',
         padding: '1rem',
       }}

@@ -29,13 +29,10 @@ export const ArticleMain: React.FC = () => {
   return (
     <Layout>
       <Sider
-        width={200}
         style={{
           background: '#fafafa',
           padding: '1rem',
-          borderRight: '1px solid #f0f0f0',
-          display: 'flex',
-          flexDirection: 'column',
+          border: '3px solid #f0f0f0',
         }}
       >
         <ArticleList
@@ -45,7 +42,7 @@ export const ArticleMain: React.FC = () => {
         />
       </Sider>
 
-        <Content style={{ padding: '1rem', margin: '1rem' }}>
+        <Content style={{ padding: '1rem' }}>
           <ArticleCard
             article={selectedArticle ? selectedArticle : defaulArticle}
             warehouses={warehouses}

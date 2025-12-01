@@ -5,6 +5,13 @@ const Role = {
 
 type Role = (typeof Role)[keyof typeof Role];
 
+const TypeProduct = {
+  ARTICLE: 'ARTICLE',
+  COMPONENT: 'COMPONENT'
+} as const
+
+type TypeProduct = (typeof TypeProduct)[keyof typeof TypeProduct];
+
 type TArticle = {
   id: string;
   articleName: string;

@@ -59,9 +59,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, warehouses })
       style={{
         borderRadius: 12,
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        padding: '1.5rem',
         marginBottom: '1.5rem',
-        maxHeight: '85vh',
+        maxHeight: '80vh',
         overflowY: 'auto',
       }}
     >

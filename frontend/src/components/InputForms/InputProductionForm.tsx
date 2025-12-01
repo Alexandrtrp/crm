@@ -63,24 +63,6 @@ export const InputProductionForm = () => {
           />
         </Form.Item>
 
-        {/* Заглушка категорий */}
-        {/* <Form.Item
-          name="category"
-          label="Категория"
-          rules={[{ required: true, message: 'Выберите категорию' }]}
-        >
-          <Select
-            // loading={warehousesLoading}
-            placeholder="Выбрать категорию"
-            options={[
-              { value: '1', label: '1' },
-              { value: '2', label: '2' },
-              { value: '3', label: '3' },
-            ]}
-            style={{ width: 250 }}
-          />
-        </Form.Item> */}
-
         <Form.List
           name="articles"
           rules={[
