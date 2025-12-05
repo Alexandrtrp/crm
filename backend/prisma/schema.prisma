@@ -21,14 +21,16 @@ enum TaskStatus {
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
-  name      String?
+  lastName  String   @default("unknown")
+  firstName String   @default("unknown")
+  surname   String   @default("unknown")
   password  String
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  createdTasks  Task[] @relation("CreatedTasks") // задачи, созданные пользователем
-  assignedTasks Task[] @relation("AssignedTasks") // задачи, назначенные пользователю
+  createdTasks  Task[] @relation("CreatedTasks") 
+  assignedTasks Task[] @relation("AssignedTasks") 
 }
 
 model Task {
@@ -56,6 +58,11 @@ model Article {
   id         String             @id @default(uuid())
   name       String             @unique
   count      Int                @default(0)
+
+category   String  @default("unknown")
+createTime Float   @default(0)
+price      Float   @default(0)
+
   components ArticleComponent[]
   stocks     ArticleStock[]
   createdAt  DateTime           @default(now())
@@ -66,8 +73,12 @@ model Article {
 model Component {
   id                String             @id @default(uuid())
   name              String             @unique
-  componentsInStock ComponentStock[] // Остатки комплектующих
-  articles          ArticleComponent[] // Связь с артикулами через промежуточную таблицу
+
+  category   String  @default("unknown")
+  price      Float   @default(0)
+
+  componentsInStock ComponentStock[] 
+  articles          ArticleComponent[] 
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 }
@@ -78,7 +89,7 @@ model ArticleComponent {
   articleId   String
   component   Component @relation(fields: [componentId], references: [id])
   componentId String
-  quantity    Float // Сколько комплектующих нужно на один артикул
+  quantity    Float 
 
   @@unique([articleId, componentId])
 }
